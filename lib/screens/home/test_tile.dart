@@ -187,7 +187,7 @@ class _TestTileState extends State<TestTile> {
                         image: AssetImage("assets/add-event.png"),
                       ),
                       mini: true,
-                      backgroundColor: Colors.blue),
+                      backgroundColor: Theme.of(context).accentColor),
                 ),
                 Visibility(
                   visible: widget.test.isAllocated,
@@ -204,6 +204,7 @@ class _TestTileState extends State<TestTile> {
                       await firestore.updateDocument(
                           "tests", widget.test.testId, {"isAllocated": false});
                     },
+                    backgroundColor: Theme.of(context).accentColor,
                     child: Image(
                       image: AssetImage("assets/delete-event.png"),
                     ),
@@ -225,6 +226,7 @@ class _TestTileState extends State<TestTile> {
                         await firestore.deleteDocument(widget.test.testId);
                       },
                       child: Icon(Icons.delete),
+                      foregroundColor: Colors.white,
                       mini: true,
                       backgroundColor: Colors.red),
                 ),

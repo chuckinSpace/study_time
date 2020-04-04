@@ -27,10 +27,11 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.black12,
             appBar: AppBar(
-                backgroundColor: Colors.blueGrey[800],
-                title: Text("Sign In"),
+                title: Text(
+                  "Sign In",
+                  style: Theme.of(context).textTheme.title,
+                ),
                 actions: <Widget>[
                   FlatButton.icon(
                       onPressed: () {
@@ -39,75 +40,95 @@ class _SignInState extends State<SignIn> {
                       icon: Icon(
                         Icons.person,
                       ),
-                      textColor: Colors.white,
+                      textColor: Colors.black,
                       label: Text(
                         "Register",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ))
                 ],
                 elevation: 0),
             body: _retrievePassword == true
-                ? SingleChildScrollView(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(height: 15),
-                            Text(
-                              "Enter you email",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                            ),
-                            SizedBox(height: 15),
-                            TextFormField(
-                                decoration: textInputDecoration.copyWith(
-                                    hintText: "Email"),
-                                validator: (val) =>
-                                    val.isEmpty ? "Enter an email" : null,
-                                onChanged: (val) {
-                                  setState(() => recoverEmail = val);
-                                }),
-                            SizedBox(height: 20),
-                            RaisedButton(
-                                color: Colors.red[400],
-                                child: Text(
-                                  "Send",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    setState(() => loading = true);
+                ? Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFFd0d6b5),
+                          Color(0xFFf9b5ac),
+                          Color(0xFFee7674),
+                        ],
+                        stops: [
+                          0,
+                          55,
+                          100,
+                        ],
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 15),
+                          Text(
+                            "Enter you email",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          SizedBox(height: 15),
+                          TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                hintText: "Email",
+                              ),
+                              validator: (val) =>
+                                  val.isEmpty ? "Enter an email" : null,
+                              onChanged: (val) {
+                                setState(() => recoverEmail = val);
+                              }),
+                          SizedBox(height: 20),
+                          RaisedButton(
+                              child: Text(
+                                "Send",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  setState(() => loading = true);
 
-                                    final response = await _auth
-                                        .recoverPassword(recoverEmail);
-                                    if (response.isNotEmpty) {
-                                      setState(() {
-                                        error = response;
-                                        setState(() => loading = false);
-                                      });
-                                    } else {
-                                      setState(() {
-                                        loading = false;
-                                        _retrievePassword = false;
-                                        error = "Email sent";
-                                      });
-                                    }
+                                  final response =
+                                      await _auth.recoverPassword(recoverEmail);
+                                  if (response.isNotEmpty) {
+                                    setState(() {
+                                      error = response;
+                                      setState(() => loading = false);
+                                    });
+                                  } else {
+                                    setState(() {
+                                      loading = false;
+                                      _retrievePassword = false;
+                                      error = "Email sent";
+                                    });
                                   }
-                                }),
-                            SizedBox(height: 12),
-                            Text(error,
-                                style: TextStyle(
-                                    color: Colors.redAccent, fontSize: 20))
-                          ],
-                        ),
+                                }
+                              }),
+                          SizedBox(height: 12),
+                          Text(error,
+                              style: TextStyle(
+                                  color: Colors.redAccent, fontSize: 20))
+                        ],
                       ),
                     ),
                   )
                 : SingleChildScrollView(
                     child: Container(
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(colors: [
+                        Color(0xFFd0d6b5),
+                        Color(0xFFf9b5ac),
+                        Color(0xFFee7674),
+                      ], stops: [
+                        0,
+                        55,
+                        100,
+                      ])),
                       padding:
                           EdgeInsets.symmetric(vertical: 20, horizontal: 50),
                       child: Form(
@@ -121,10 +142,9 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 15),
                             RaisedButton(
-                              color: Colors.blue[400],
                               child: Text(
                                 "Sign In With Google",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                               ),
                               onPressed: () async {
                                 setState(() => loading = true);
@@ -199,10 +219,9 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 20),
                             RaisedButton(
-                              color: Colors.red[400],
                               child: Text(
                                 "Sign In",
-                                style: TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.black),
                               ),
                               onPressed: () async {
                                 setState(() {

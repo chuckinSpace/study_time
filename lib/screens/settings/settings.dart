@@ -221,7 +221,6 @@ class _SettingsState extends State<Settings> {
               ),
             )
           ],
-          backgroundColor: Colors.black38,
           title: Text("Settings"),
           centerTitle: true,
         ),
@@ -460,11 +459,8 @@ class _SettingsState extends State<Settings> {
                           onPressed: () async {
                             AuthService _auth = new AuthService();
                             await _auth.signOut();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Authenticate()),
-                            );
+                            Navigator.pushReplacementNamed(
+                                context, "/authenticate");
                           },
                           icon: Icon(Icons.exit_to_app),
                           textColor: Colors.red,
@@ -488,8 +484,9 @@ class _SettingsState extends State<Settings> {
                       false,
                     );
                   },
-                  backgroundColor:
-                      isConfigured == false ? Colors.red : Colors.blue,
+                  backgroundColor: isConfigured == false
+                      ? Colors.red
+                      : Theme.of(context).buttonColor,
                   child: Icon(Icons.save),
                 ),
               )
@@ -519,7 +516,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Study time will not accomodate any sessions before morning Cut off or after Night cut off, usually used for bed time Hint: You can use the morning cut off to take you classes into account! Example: Your classes end every day around 4pm, set the morning cut off to 4pm",
+                      "Study time will not accomodate any sessions before morning Cut off or after Night cut off, usually used for bed time.\n Hint: You can use the morning cut off to take you classes into account! Example: Your classes end every day around 4pm, set the morning cut off to 4pm",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -551,7 +548,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Set the perfect time for you to study, Study Time will always try to set up sessions at between these times as the first option.",
+                      "Set the perfect time for you to study, Study Time will always try to set up sessions between these times as the first option.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -582,7 +579,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Select if you would rather have sessions later in the day (Night Owl). After study time tried to allocate on the sweet spot, if will try later in the night if this option is active, otherwise will try earlier in the morning.",
+                      "Select if you would rather have sessions later in the day (Night Owl). \nAfter study time tried to allocate on the sweet spot, it will try later in the night if this option is active, otherwise will try earlier in the morning.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -613,7 +610,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "The most important part, select here wich one is the calendar that you use, the list showing here are the your device's current calendars. Study time will retrieve events from here to check for availability and also will write the tests and sessions created.",
+                      "The most important part, select here, wich one is the calendar that you use, the list showing here are the your device's current calendars. Study time will retrieve events from here to check for availability and also will write the tests and sessions created.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )

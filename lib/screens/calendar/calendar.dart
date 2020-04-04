@@ -105,7 +105,6 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text("Study Time"),
-        backgroundColor: Colors.black38,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -182,7 +181,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
             ? Colors.brown[500]
             : _calendarController.isToday(date)
                 ? Colors.brown[300]
-                : Colors.blue[400],
+                : Theme.of(context).backgroundColor,
       ),
       width: 16.0,
       height: 16.0,

@@ -1,6 +1,7 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/models/event_from_device.dart';
+import 'package:test_device/screens/authenticate/authenticate.dart';
 import 'package:test_device/screens/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:test_device/models/user.dart';
@@ -29,6 +30,33 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        routes: {
+          "/authenticate": (_) => new Authenticate(),
+        },
+        theme: ThemeData(
+          primaryColor: Color(0xFF987284),
+          accentColor: Color(0xFFEE7674),
+          fontFamily: 'Raleway',
+          backgroundColor: Color(0xFFD0D6B5),
+          buttonColor: Color(0xFF75B9BE),
+          textTheme: TextTheme(
+              headline: TextStyle(
+                  fontSize: 72.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Raleway",
+                  color: Colors.black),
+              title: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  fontFamily: "Raleway"),
+              body1: TextStyle(
+                  fontSize: 14.0, fontFamily: 'Hind', color: Colors.black),
+              button: TextStyle(fontSize: 14.0, fontFamily: 'Hind')),
+          appBarTheme: AppBarTheme(
+            color: Color(0xFFD0D6B5),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         home: Wrapper(),
         builder: (BuildContext context, Widget widget) {

@@ -3,7 +3,7 @@ import 'package:test_device/models/session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import "package:test_device/helpers/TimeAllocation.dart";
 
-final time = TimeAllocation("asd");
+final time = TimeAllocation("asd", [], 2);
 final today = new DateTime.now();
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

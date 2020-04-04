@@ -169,10 +169,9 @@ class _HomeState extends State<Home> {
               ),
             )
           : Scaffold(
-              backgroundColor: Colors.brown[50],
               appBar: AppBar(
-                title: Text("Study Time"),
-                backgroundColor: Colors.black38,
+                title: Text("Study Time",
+                    style: Theme.of(context).textTheme.title),
                 elevation: 0,
                 actions: <Widget>[
                   Visibility(
@@ -208,7 +207,7 @@ class _HomeState extends State<Home> {
                         child: Icon(
                           Icons.settings,
                           color:
-                              isConfigured == false ? Colors.red : Colors.white,
+                              isConfigured == false ? Colors.red : Colors.black,
                         ),
                       ),
                     ),
@@ -223,6 +222,7 @@ class _HomeState extends State<Home> {
                         message: "Show Tutorial",
                         child: Icon(
                           Icons.help,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -232,7 +232,8 @@ class _HomeState extends State<Home> {
               body: isWelcomeScreenSeen == false
                   ? WelcomeScreen(uid: user?.uid, showHome: showHome)
                   : Container(
-                      decoration: BoxDecoration(color: Colors.black12),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).backgroundColor),
                       child: TestList(),
                     ),
               floatingActionButton: Padding(
@@ -255,7 +256,7 @@ class _HomeState extends State<Home> {
                         child: Icon(
                           Icons.calendar_today,
                         ),
-                        backgroundColor: Colors.blue,
+                        backgroundColor: Theme.of(context).primaryColor,
                       ),
                     ),
                     Visibility(
@@ -268,7 +269,7 @@ class _HomeState extends State<Home> {
                         child: Icon(
                           Icons.add,
                         ),
-                        backgroundColor: Colors.green,
+                        backgroundColor: Theme.of(context).accentColor,
                       ),
                     ),
                   ],
@@ -300,7 +301,7 @@ class _HomeState extends State<Home> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "You can use this calendar or your device's, they will be in sync, all your tests and study sessions will be there",
+                      "You can use this calendar, or your device's. They will be in sync, all your tests and study sessions will be there",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -332,7 +333,7 @@ class _HomeState extends State<Home> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Click here to add a new test, It will be added to your device's calendar also",
+                      "Add a new test, It will be added to your device's calendar also",
                       style: TextStyle(color: Colors.white),
                     ),
                   )

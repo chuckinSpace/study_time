@@ -17,6 +17,7 @@ class _RegisterState extends State<Register> {
   String email = "";
   String password = "";
   String error = "";
+  String retype = "";
   bool loading = false;
 
   @override
@@ -24,22 +25,37 @@ class _RegisterState extends State<Register> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.black12,
             appBar: AppBar(
-                backgroundColor: Colors.blueGrey[800],
-                title: Text("Sign Up"),
+                title:
+                    Text("Sign Up", style: Theme.of(context).textTheme.title),
                 actions: <Widget>[
                   FlatButton.icon(
                       onPressed: () {
                         widget.toggleView();
                       },
                       icon: Icon(Icons.person),
-                      textColor: Colors.white,
+                      textColor: Colors.black,
                       label: Text("Sign In",
-                          style: TextStyle(color: Colors.white)))
+                          style: TextStyle(color: Colors.black)))
                 ],
                 elevation: 0),
             body: Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFd0d6b5),
+                    Color(0xFFf9b5ac),
+                    Color(0xFFee7674),
+                  ],
+                  stops: [
+                    0,
+                    55,
+                    100,
+                  ],
+                ),
+              ),
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
               child: Form(
                   key: _formKey,
@@ -68,11 +84,21 @@ class _RegisterState extends State<Register> {
                           obscureText: true,
                         ),
                         SizedBox(height: 20),
+                        TextFormField(
+                          decoration: textInputDecoration.copyWith(
+                              hintText: "Re Type Password"),
+                          validator: (val) =>
+                              val != password ? "Password do not match" : null,
+                          onChanged: (val) {
+                            setState(() => retype = val);
+                          },
+                          obscureText: true,
+                        ),
+                        SizedBox(height: 20),
                         RaisedButton(
-                          color: Colors.red[400],
                           child: Text(
                             "Register",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {

@@ -8,7 +8,7 @@ class Loading extends StatelessWidget {
       /*   color: Colors.black38, */
       child: Center(
         child: SizedBox(
-          child: SpinKitChasingDots(color: Colors.blue),
+          child: SpinKitChasingDots(color: Theme.of(context).primaryColor),
           height: 200,
           width: 200,
         ),

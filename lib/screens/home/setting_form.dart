@@ -141,8 +141,10 @@ class _SettingsFormState extends State<SettingsForm> {
                           onPressed: _showDateTimePicker,
                           tooltip: 'Due Date',
                           child: Icon(Icons.calendar_today),
-                          backgroundColor:
-                              _parsedDueDate == "" ? Colors.red : Colors.blue,
+                          foregroundColor: Colors.white,
+                          backgroundColor: _parsedDueDate == ""
+                              ? Colors.red
+                              : Theme.of(context).buttonColor,
                           elevation: 0,
                         ),
                         SizedBox(width: 10),
@@ -182,10 +184,8 @@ class _SettingsFormState extends State<SettingsForm> {
                     ),
                   ),
                   RaisedButton(
-                      color: Colors.black54,
                       child: Text(
-                          widget.test != null ? "Update Test" : "Add Test",
-                          style: TextStyle(color: Colors.white)),
+                          widget.test != null ? "Update Test" : "Add Test"),
                       onPressed: () async {
                         if (_formKey.currentState.validate() &&
                             _parsedDueDate != "" &&
