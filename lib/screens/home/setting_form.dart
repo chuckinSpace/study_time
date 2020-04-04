@@ -206,10 +206,12 @@ class _SettingsFormState extends State<SettingsForm> {
                                     user.uid, [], _currentComplexity,
                                     dueDate: _currentDueDate, testId: testId)
                                 .calculateSessions();
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.pop(context);
+                            if (this.mounted) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Navigator.pop(context);
+                            }
                           } else {
                             if (isLoading == false) {
                               setState(() {

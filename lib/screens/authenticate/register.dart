@@ -46,8 +46,8 @@ class _RegisterState extends State<Register> {
                 gradient: LinearGradient(
                   colors: [
                     Color(0xFFd0d6b5),
-                    Color(0xFFf9b5ac),
-                    Color(0xFFee7674),
+                    Color(0xFF75b9be),
+                    Color(0xFF987284),
                   ],
                   stops: [
                     0,

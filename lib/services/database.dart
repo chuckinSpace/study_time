@@ -344,7 +344,7 @@ class DatabaseService {
       return testCollection
           .where("user", isEqualTo: uid)
           .where("dueDate", isGreaterThanOrEqualTo: new DateTime.now())
-          .orderBy("dueDate", descending: true)
+          .orderBy("dueDate", descending: false)
           .snapshots()
           .map(_testListFromSnapshot);
     } catch (e) {

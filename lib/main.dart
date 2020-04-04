@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           "/authenticate": (_) => new Authenticate(),
         },
         theme: ThemeData(
-          primaryColor: Color(0xFF987284),
+          primaryColor: Color(0xFF75B9BE),
           accentColor: Color(0xFFEE7674),
           fontFamily: 'Raleway',
           backgroundColor: Color(0xFFD0D6B5),
@@ -54,15 +54,15 @@ class MyApp extends StatelessWidget {
                   fontSize: 14.0, fontFamily: 'Hind', color: Colors.black),
               button: TextStyle(fontSize: 14.0, fontFamily: 'Hind')),
           appBarTheme: AppBarTheme(
-            color: Color(0xFFD0D6B5),
+            color: Color(0xFF75B9BE),
           ),
         ),
         debugShowCheckedModeBanner: false,
         home: Wrapper(),
         builder: (BuildContext context, Widget widget) {
-          /* createBannerAd(isIOS)
+          createBannerAd(isIOS)
             ..load()
-            ..show(); */
+            ..show();
 
           double paddingBottom = 60.0;
           double paddingRight = 0;

@@ -53,8 +53,8 @@ class _SignInState extends State<SignIn> {
                       gradient: LinearGradient(
                         colors: [
                           Color(0xFFd0d6b5),
-                          Color(0xFFf9b5ac),
-                          Color(0xFFee7674),
+                          Color(0xFF75b9be),
+                          Color(0xFF987284),
                         ],
                         stops: [
                           0,
@@ -122,8 +122,8 @@ class _SignInState extends State<SignIn> {
                       decoration: BoxDecoration(
                           gradient: LinearGradient(colors: [
                         Color(0xFFd0d6b5),
-                        Color(0xFFf9b5ac),
-                        Color(0xFFee7674),
+                        Color(0xFF75b9be),
+                        Color(0xFF987284),
                       ], stops: [
                         0,
                         55,

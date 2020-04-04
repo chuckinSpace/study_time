@@ -40,10 +40,24 @@ class _SettingsState extends State<Settings> {
   bool useForWeekends = true;
   Authenticate authenticate = Authenticate();
   final device = new EventFromDevice();
+  ScrollController _scrollController;
   @override
   void initState() {
     super.initState();
     initTargets();
+    _scrollController = new ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: true,
+    );
+  }
+
+  Future<void> _toTop() async {
+    await _scrollController.animateTo(
+      _scrollController.position.minScrollExtent,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.ease,
+    );
+    return;
   }
 
   didChangeDependencies() async {
@@ -63,7 +77,8 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  void _showTutorial() {
+  void _showTutorial() async {
+    await _toTop();
     TutorialCoachMark(context,
         targets: targets,
         colorShadow: Colors.red,
@@ -243,6 +258,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 )
               : SingleChildScrollView(
+                  controller: _scrollController,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
