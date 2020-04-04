@@ -32,8 +32,7 @@ class _HomeState extends State<Home> {
   DatabaseService database;
   bool isConfigured = false;
   Map userSettings;
-  String calendarToUse;
-  String calendarToUseName;
+
   bool firstShow = false;
   dynamic user;
   bool isLoading = false;
@@ -186,8 +185,11 @@ class _HomeState extends State<Home> {
                           showTutorial();
                         });
                       },
-                      icon: Icon(
-                        Icons.home,
+                      icon: Tooltip(
+                        message: "Home Screen",
+                        child: Icon(
+                          Icons.home,
+                        ),
                       ),
                     ),
                   ),
@@ -201,10 +203,13 @@ class _HomeState extends State<Home> {
                           MaterialPageRoute(builder: (context) => Settings()),
                         );
                       },
-                      icon: Icon(
-                        Icons.settings,
-                        color:
-                            isConfigured == false ? Colors.red : Colors.white,
+                      icon: Tooltip(
+                        message: "Go To Settings",
+                        child: Icon(
+                          Icons.settings,
+                          color:
+                              isConfigured == false ? Colors.red : Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -214,8 +219,11 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         showTutorial();
                       },
-                      icon: Icon(
-                        Icons.help,
+                      icon: Tooltip(
+                        message: "Show Tutorial",
+                        child: Icon(
+                          Icons.help,
+                        ),
                       ),
                     ),
                   ),
@@ -235,6 +243,7 @@ class _HomeState extends State<Home> {
                     Visibility(
                       visible: isWelcomeScreenSeen == true,
                       child: FloatingActionButton(
+                        tooltip: "Show Calendar",
                         heroTag: "calendar",
                         key: _calendarKey,
                         onPressed: () {
@@ -252,6 +261,7 @@ class _HomeState extends State<Home> {
                     Visibility(
                       visible: isWelcomeScreenSeen == true,
                       child: FloatingActionButton(
+                        tooltip: "Add New Test",
                         key: _testKey,
                         heroTag: "add",
                         onPressed: _showSettingsPanel,

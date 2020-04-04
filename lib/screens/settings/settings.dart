@@ -51,7 +51,7 @@ class _SettingsState extends State<Settings> {
     final user = Provider.of<User>(context);
     if (user != null) {
       database = new DatabaseService(user.uid);
-      time = new TimeAllocation(user.uid);
+
       setState(() {
         isLoading = true;
       });
@@ -109,7 +109,6 @@ class _SettingsState extends State<Settings> {
     print("value $value");
     setState(() {
       _nightOwl = value;
-      time.nightOwl = value;
     });
   }
 
@@ -127,7 +126,6 @@ class _SettingsState extends State<Settings> {
       if (value != null) {
         setState(() {
           _morningValue = value;
-          time.morning = value;
         });
       }
     });
@@ -147,7 +145,6 @@ class _SettingsState extends State<Settings> {
       if (value != null) {
         setState(() {
           _nightValue = value;
-          time.night = value;
         });
       }
     });
@@ -167,7 +164,6 @@ class _SettingsState extends State<Settings> {
       if (value != null) {
         setState(() {
           _sweetStart = value;
-          time.sweetSpotStart = value;
         });
       }
     });
@@ -187,7 +183,6 @@ class _SettingsState extends State<Settings> {
       if (value != null) {
         setState(() {
           _sweetEnd = value;
-          time.sweetSpotEnd = value;
         });
       }
     });
@@ -218,8 +213,11 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 _showTutorial();
               },
-              icon: Icon(
-                Icons.help,
+              icon: Tooltip(
+                message: "Show Settings Tutorial",
+                child: Icon(
+                  Icons.help,
+                ),
               ),
             )
           ],
@@ -470,8 +468,10 @@ class _SettingsState extends State<Settings> {
                           },
                           icon: Icon(Icons.exit_to_app),
                           textColor: Colors.red,
-                          label:
-                              Text("Sign Out", style: TextStyle(fontSize: 10))),
+                          label: Tooltip(
+                              message: "Sign Out",
+                              child: Text("Sign Out",
+                                  style: TextStyle(fontSize: 10)))),
                     ],
                   ),
                 ),
@@ -480,6 +480,7 @@ class _SettingsState extends State<Settings> {
             ? Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: FloatingActionButton(
+                  tooltip: "Save Preferences",
                   onPressed: () async {
                     await _saveUserSettings(user?.uid);
                     Navigator.pop(

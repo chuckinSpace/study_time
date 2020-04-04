@@ -35,7 +35,7 @@ class DatabaseService {
           "calendarToUse": data["calendarToUse"] ?? "",
           "calendarToUseName": data["calendarToUseName"] ?? "",
           "isConfigured": data["isConfigured"] ?? false,
-          "isWelcomeScreenSeen": data["isWelcomeScreenSeen"] ?? false
+          "isWelcomeScreenSeen": data["isWelcomeScreenSeen"] ?? false,
         };
         return userInfo;
       } else {
@@ -79,7 +79,6 @@ class DatabaseService {
           "sweetSpotEnd": 23,
           "calendarToUse": "",
           "calendarToUseName": "",
-          "isTestTutorialSeen": false,
           "isWelcomeScreenSeen": false,
         });
       }

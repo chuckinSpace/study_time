@@ -5,6 +5,7 @@ import 'package:test_device/screens/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:test_device/models/user.dart';
 import 'package:test_device/services/auth.dart';
+import 'package:test_device/shared/loading.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,9 +32,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: Wrapper(),
         builder: (BuildContext context, Widget widget) {
-          createBannerAd(isIOS)
+          /* createBannerAd(isIOS)
             ..load()
-            ..show();
+            ..show(); */
 
           double paddingBottom = 60.0;
           double paddingRight = 0;

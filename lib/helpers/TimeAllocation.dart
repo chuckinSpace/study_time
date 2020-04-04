@@ -15,23 +15,23 @@ class TimeAllocation {
   int night;
   int sweetSpotStart;
   int sweetSpotEnd;
-  List<Session> finalSessions = [];
+  List<Session> finalSessions;
   bool nightOwl;
   int daysToStudy;
   int hoursNeeded;
   int sessionsNeeded;
   bool testing;
   TimeAllocation(
-    this.uid, {
+    this.uid,
     this.finalSessions,
+    this.complexity, {
     this.idealStudyLenght = 1,
     this.sweetSpotEnd = 21,
     this.sweetSpotStart = 19,
     this.nightOwl = true,
     this.dueDate,
-    this.complexity = 1,
     this.importance = 0,
-    this.testId,
+    this.testId = "",
     this.morning = 8,
     this.night = 21,
     this.testing = false,
@@ -263,7 +263,7 @@ class TimeAllocation {
         print("not enough days to allocate ending");
       } else {
         print("sessions to create");
-        /*     sweetSpotSessions.forEach((session) => print("$session\n")); */
+        sweetSpotSessions.forEach((session) => print("$session\n"));
         print("CALLING ACCOMODATE");
         await accomodateSessions(sweetSpotSessions, eventsFromDevice);
         print("ACOMMODATE FINISHED");

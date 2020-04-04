@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:test_device/models/user.dart';
 import 'package:test_device/services/database.dart';

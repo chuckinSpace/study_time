@@ -6,10 +6,9 @@ import 'package:test_device/screens/home/setting_form.dart';
 import 'package:test_device/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:test_device/models/user.dart';
-/* import "package:tutorial_coach_mark/animated_focus_light.dart";
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart'; */
+import "package:tutorial_coach_mark/animated_focus_light.dart";
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-// ignore: must_be_immutable
 class TestTile extends StatefulWidget {
   final Test test;
 
@@ -22,32 +21,32 @@ class TestTile extends StatefulWidget {
 
 class _TestTileState extends State<TestTile> {
   GlobalKey showAddSession = GlobalKey();
+  GlobalKey showTest = GlobalKey();
   GlobalKey showRemoveFromCalendar = GlobalKey();
   GlobalKey showDeleteTest = GlobalKey();
-  /*  List<TargetFocus> targets = List(); */
+  List<TargetFocus> isAllocatedTutorials = List();
+  List<TargetFocus> isNotAllocatedTutorials = List();
   DatabaseService firestore;
   dynamic user;
   bool isLoading = false;
   Map userSettings;
-  bool isTestTutorialSeen = false;
+
   @override
   void didChangeDependencies() async {
     try {
       user = Provider.of<User>(context);
       firestore = new DatabaseService(user.uid);
+      initTargets();
       await setSettings();
-      if (isTestTutorialSeen == true) {
-        /*  _showTutorial(); */
-      }
     } catch (e) {
       print("error $e");
     }
     super.didChangeDependencies();
   }
 
-  /* void _showTutorial() {
+  void _showAllocatedTutorial() {
     TutorialCoachMark(context,
-        targets: targets,
+        targets: isAllocatedTutorials,
         colorShadow: Colors.red,
         textSkip: "QUIT",
         paddingFocus: 10,
@@ -59,7 +58,23 @@ class _TestTileState extends State<TestTile> {
       print("skip");
     })
       ..show();
-  } */
+  }
+
+  void _showNotAllocatedTutorial() {
+    TutorialCoachMark(context,
+        targets: isNotAllocatedTutorials,
+        colorShadow: Colors.red,
+        textSkip: "QUIT",
+        paddingFocus: 10,
+        opacityShadow: 0.8, finish: () {
+      print("finish");
+    }, clickTarget: (target) {
+      print(target);
+    }, clickSkip: () {
+      print("skip");
+    })
+      ..show();
+  }
 
   Future<void> setSettings() async {
     try {
@@ -71,7 +86,6 @@ class _TestTileState extends State<TestTile> {
         if (userSettings != null) {
           if (this.mounted) {
             setState(() {
-              isTestTutorialSeen = userSettings["isTestTutorialSeen"];
               isLoading = false;
             });
           }
@@ -102,10 +116,10 @@ class _TestTileState extends State<TestTile> {
     final user = Provider.of<User>(context);
     TimeAllocation timeAllocation = TimeAllocation(
       user?.uid,
+      [],
+      widget?.test?.complexity,
       testId: widget?.test?.testId,
-      complexity: widget?.test?.complexity,
       dueDate: widget?.test?.dueDate,
-      finalSessions: [],
     );
 
     String _tileText() {
@@ -129,24 +143,26 @@ class _TestTileState extends State<TestTile> {
       child: Card(
         margin: EdgeInsets.fromLTRB(20, 6, 20, 0),
         child: ListTile(
+            key: showTest,
             onTap: _showSettingsPanel,
             leading: widget.index == 0
                 ? IconButton(
-                    icon: Icon(Icons.help),
+                    icon: Tooltip(
+                        message: "Help with tests", child: Icon(Icons.help)),
                     onPressed: () {
-                      if (!widget.test.isAllocated) {
-                        /*   ShowCaseWidget.of(context)
-                            .startShowCase([showAddSession, showDeleteTest]); */
-                      } else {
-                        /*   ShowCaseWidget.of(context)
-                            .startShowCase([showRemoveFromCalendar]); */
-                      }
+                      widget.test.isAllocated
+                          ? _showAllocatedTutorial()
+                          : _showNotAllocatedTutorial();
                     },
                   )
                 : IconButton(
                     icon: !widget.test.isAllocated
-                        ? Icon(Icons.priority_high)
-                        : Icon(Icons.check),
+                        ? Tooltip(
+                            message: "Not Allocated",
+                            child: Icon(Icons.priority_high))
+                        : Tooltip(
+                            message: "Allocated in Calendar",
+                            child: Icon(Icons.check)),
                     onPressed: () {},
                   ),
             title: AutoSizeText(
@@ -177,6 +193,7 @@ class _TestTileState extends State<TestTile> {
                   visible: widget.test.isAllocated,
                   child: FloatingActionButton(
                     tooltip: "Remove Sessions from Calendar",
+                    key: showRemoveFromCalendar,
                     mini: true,
                     heroTag: "remove${widget.test.testId}",
                     onPressed: () async {
@@ -196,6 +213,8 @@ class _TestTileState extends State<TestTile> {
                   visible: !widget.test.isAllocated,
                   child: FloatingActionButton(
                       heroTag: "delete${widget.test.testId}",
+                      tooltip: "Delete test",
+                      key: showDeleteTest,
                       onPressed: () async {
                         // delete sessions
                         await firestore.deleteDocumentWhere(
@@ -216,13 +235,76 @@ class _TestTileState extends State<TestTile> {
     );
   }
 
-  /* void initTargets() {
-    targets.add(TargetFocus(
-      identify: "Show Calendar",
+  void initTargets() {
+    isAllocatedTutorials.add(TargetFocus(
+      identify: "Remove Sessions",
+      keyTarget: showRemoveFromCalendar,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Sessions Created!",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Your sessions were created! go check your device's calendar or the Calendar here,also if you click here you can delete those sessions from your calendar",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+    isNotAllocatedTutorials.add(TargetFocus(
+      identify: "Test",
+      keyTarget: showTest,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Test",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "This is your test created, here you can add and delete the study sessions for this test from your calendars",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+
+    isNotAllocatedTutorials.add(TargetFocus(
+      identify: "Add Sessions",
       keyTarget: showAddSession,
       contents: [
         ContentTarget(
-            align: AlignContent.top,
+            align: AlignContent.bottom,
             child: Container(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -238,7 +320,7 @@ class _TestTileState extends State<TestTile> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "The best times for your sessions are already created, just click here to add them to you calendar",
+                      "Add your sessions for this test to your calendar",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -248,7 +330,38 @@ class _TestTileState extends State<TestTile> {
       ],
       shape: ShapeLightFocus.RRect,
     ));
-  } */
+    isNotAllocatedTutorials.add(TargetFocus(
+      identify: "Delete test",
+      keyTarget: showDeleteTest,
+      contents: [
+        ContentTarget(
+            align: AlignContent.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Delete Test",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "This will delete you test completly",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ))
+      ],
+      shape: ShapeLightFocus.RRect,
+    ));
+  }
 }
 
 typedef WritingCallback = void Function(bool isWriting);
