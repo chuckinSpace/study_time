@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:test_device/models/event_from_device.dart';
 import 'package:test_device/services/database.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,9 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 400),
     );
     _animationController.forward();
+    SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+    );
   }
 
   didChangeDependencies() async {
@@ -54,6 +58,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   void dispose() {
     _calendarController.dispose();
     super.dispose();
+    SystemChrome.setPreferredOrientations([]);
   }
 
   void _onDaySelected(DateTime day, List events) {
@@ -107,6 +112,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Text("Study Time"),
@@ -122,7 +128,6 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
         ),
       ),
       body: Column(
-        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TableCalendar(
             calendarController: _calendarController,
@@ -164,7 +169,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
             child: new ListView.builder(
                 itemCount: _selectedEvents.length,
                 itemBuilder: (BuildContext ctxt, int index) {
-                  print(" selected event, $_selectedEvents");
+                  /* print(" selected event, $_selectedEvents"); */
                   return new ListTile(
                     title: Text(
                       _selectedEvents[index]["text"],

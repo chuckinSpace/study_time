@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext awaitcontext) {
     bool isIOS = Theme.of(awaitcontext).platform == TargetPlatform.iOS;
     bool isKeyboardOpen = false;
+
     FirebaseAdMob.instance.initialize(
         appId: isIOS
             ? "ca-app-pub-7595932337183148~3525622677"
@@ -43,11 +44,6 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFFD0D6B5),
           buttonColor: Color(0xFF75B9BE),
           textTheme: TextTheme(
-              headline: TextStyle(
-                  fontSize: 72.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Raleway",
-                  color: Colors.black),
               title: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -67,9 +63,9 @@ class MyApp extends StatelessWidget {
           observer: observer,
         ),
         builder: (BuildContext context, Widget widget) {
-          createBannerAd(isIOS)
+          /*     createBannerAd(isIOS)
             ..load()
-            ..show();
+            ..show(); */
           isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
           double paddingBottom = isIOS ? 90.0 : 60.0;

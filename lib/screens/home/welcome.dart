@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/items.dart';
 
@@ -30,26 +29,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Flexible(
                 flex: 1,
                 fit: FlexFit.tight,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Column(
-                    children: <Widget>[
-                      Text(item['header'],
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Column(
+                      children: <Widget>[
+                        Text(item['header'],
+                            style: TextStyle(
+                                fontSize: 50.0,
+                                fontWeight: FontWeight.w300,
+                                color: Color(0XFF3F3D56),
+                                height: 2.0)),
+                        Text(
+                          item['description'],
                           style: TextStyle(
-                              fontSize: 50.0,
-                              fontWeight: FontWeight.w300,
-                              color: Color(0XFF3F3D56),
-                              height: 2.0)),
-                      Text(
-                        item['description'],
-                        style: TextStyle(
-                            color: Colors.grey,
-                            letterSpacing: 1.2,
-                            fontSize: 16.0,
-                            height: 1.3),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
+                              color: Colors.grey,
+                              letterSpacing: 1.2,
+                              fontSize: 16.0,
+                              height: 1.3),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -72,19 +73,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   double currentPage = 0.0;
   final _pageViewController = new PageController();
-  @override
-  void didChangeDependencies() async {
-    try {
-      await Firestore.instance
-          .collection("users")
-          .document(widget.uid)
-          .updateData({"isWelcomeScreenSeen": true});
-    } catch (e) {
-      print("error on welcome page $e");
-    }
-
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext mainContext) {

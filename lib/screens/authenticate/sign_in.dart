@@ -32,12 +32,6 @@ class _SignInState extends State<SignIn> {
   bool _retrievePassword = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return loading
         ? Loading()
@@ -185,7 +179,7 @@ class _SignInState extends State<SignIn> {
                                     loading = false;
                                   });
                                 } else {
-                                  if (this.mounted) {
+                                  if (this.mounted && result) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

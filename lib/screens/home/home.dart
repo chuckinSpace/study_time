@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
@@ -61,13 +62,23 @@ class _HomeState extends State<Home> {
     super.didChangeDependencies();
     try {
       user = Provider.of<User>(context, listen: false);
-      if (user != null) {
+      if (user != null && this.mounted) {
         database = new DatabaseService(user.uid);
-
         await setSettings();
       }
     } catch (e) {
       print("error $e");
+    }
+  }
+
+  Future<void> setTutorialSeen() async {
+    try {
+      await Firestore.instance
+          .collection("users")
+          .document(user.uid)
+          .updateData({"isWelcomeScreenSeen": true});
+    } catch (e) {
+      print("error in tutorial seen $e");
     }
   }
 
@@ -126,9 +137,11 @@ class _HomeState extends State<Home> {
   }
 
   void showHome() {
-    setState(() {
-      showHomeBool = true;
-    });
+    if (this.mounted) {
+      setState(() {
+        showHomeBool = true;
+      });
+    }
   }
 
   @override
@@ -189,10 +202,10 @@ class _HomeState extends State<Home> {
                     visible:
                         isWelcomeScreenSeen == false && showHomeBool == true,
                     child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await setTutorialSeen();
                         setState(() {
                           isWelcomeScreenSeen = true;
-                          showTutorial();
                         });
                       },
                       icon: Tooltip(
