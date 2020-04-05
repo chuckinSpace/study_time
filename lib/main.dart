@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:test_device/models/user.dart';
 import 'package:test_device/services/auth.dart';
 
-void main() => runApp(MyApp());
-
 EventFromDevice device = new EventFromDevice();
+
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

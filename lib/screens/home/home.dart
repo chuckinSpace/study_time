@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:test_device/models/event_from_device.dart';
 import 'package:test_device/models/test.dart';
 import 'package:test_device/screens/home/welcome.dart';
-
 import 'package:test_device/models/user.dart';
 import 'package:test_device/screens/calendar/calendar.dart';
 import 'package:test_device/screens/home/test_list.dart';
 import 'package:test_device/screens/home/setting_form.dart';
 import 'package:test_device/screens/settings/settings.dart';
-
 import 'package:test_device/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:test_device/shared/loading.dart';
@@ -207,6 +205,7 @@ class _HomeState extends State<Home> {
                         setState(() {
                           isWelcomeScreenSeen = true;
                         });
+                        showTutorial();
                       },
                       icon: Tooltip(
                         message: "Home Screen",
