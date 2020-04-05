@@ -37,12 +37,17 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   }
 
   didChangeDependencies() async {
-    super.didChangeDependencies();
-    final user = Provider.of<User>(context);
-    database = new DatabaseService(user.uid);
-    final tests = await database.getTestsByUser(user.uid);
-    deviceEvents = await _eventsFromDevice.retrieveEventsFromDevice(user.uid);
-    _eventFromDeviceParse(deviceEvents, tests);
+    try {
+      super.didChangeDependencies();
+      final user = Provider.of<User>(context);
+      database = new DatabaseService(user.uid);
+      final tests = await database.getTestsByUser(user.uid);
+      deviceEvents = await _eventsFromDevice
+          .retrieveEventsFromDevice(user.uid); //ERROR IOS
+      _eventFromDeviceParse(deviceEvents, tests);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

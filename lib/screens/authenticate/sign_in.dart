@@ -29,22 +29,36 @@ class _SignInState extends State<SignIn> {
         : Scaffold(
             appBar: AppBar(
                 title: Text(
-                  "Sign In",
+                  _retrievePassword == true ? "Recover Password" : "Sign In",
                   style: Theme.of(context).textTheme.title,
                 ),
                 actions: <Widget>[
-                  FlatButton.icon(
-                      onPressed: () {
-                        widget.toggleView();
-                      },
-                      icon: Icon(
-                        Icons.person,
-                      ),
-                      textColor: Colors.black,
-                      label: Text(
-                        "Register",
-                        style: TextStyle(color: Colors.black),
-                      ))
+                  Visibility(
+                    visible: _retrievePassword == true,
+                    child: FlatButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _retrievePassword = false;
+                          });
+                        },
+                        icon: Icon(Icons.person),
+                        label: Text("Log In")),
+                  ),
+                  Visibility(
+                    visible: _retrievePassword == false,
+                    child: FlatButton.icon(
+                        onPressed: () {
+                          widget.toggleView();
+                        },
+                        icon: Icon(
+                          Icons.person,
+                        ),
+                        textColor: Colors.black,
+                        label: Text(
+                          "Register",
+                          style: TextStyle(color: Colors.black),
+                        )),
+                  )
                 ],
                 elevation: 0),
             body: _retrievePassword == true
@@ -117,20 +131,20 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                   )
-                : SingleChildScrollView(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                        Color(0xFFd0d6b5),
-                        Color(0xFF75b9be),
-                        Color(0xFF987284),
-                      ], stops: [
-                        0,
-                        55,
-                        100,
-                      ])),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                : Container(
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                      Color(0xFFd0d6b5),
+                      Color(0xFF75b9be),
+                      Color(0xFF987284),
+                    ], stops: [
+                      0,
+                      55,
+                      100,
+                    ])),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                    child: SingleChildScrollView(
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -142,10 +156,8 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 15),
                             RaisedButton(
-                              child: Text(
-                                "Sign In With Google",
-                                style: TextStyle(color: Colors.black),
-                              ),
+                              child: Text("Sign In With Google",
+                                  style: Theme.of(context).textTheme.button),
                               onPressed: () async {
                                 setState(() => loading = true);
                                 dynamic result = await _auth.signInWithGoogle();
@@ -219,10 +231,8 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 20),
                             RaisedButton(
-                              child: Text(
-                                "Sign In",
-                                style: TextStyle(color: Colors.black),
-                              ),
+                              child: Text("Sign In",
+                                  style: Theme.of(context).textTheme.button),
                               onPressed: () async {
                                 setState(() {
                                   error = "";
@@ -240,6 +250,14 @@ class _SignInState extends State<SignIn> {
                                           "Incorrect combination email and password please try again";
                                       loading = false;
                                     });
+                                  } else {
+                                    if (this.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Home()),
+                                      );
+                                    }
                                   }
                                 }
                               },

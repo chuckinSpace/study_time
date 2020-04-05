@@ -26,6 +26,7 @@ class _RegisterState extends State<Register> {
         ? Loading()
         : Scaffold(
             appBar: AppBar(
+                centerTitle: false,
                 title:
                     Text("Sign Up", style: Theme.of(context).textTheme.title),
                 actions: <Widget>[
@@ -79,7 +80,9 @@ class _RegisterState extends State<Register> {
                               ? "Enter a password 6+ chars long"
                               : null,
                           onChanged: (val) {
-                            setState(() => password = val);
+                            setState(() {
+                              password = val;
+                            });
                           },
                           obscureText: true,
                         ),
@@ -98,7 +101,7 @@ class _RegisterState extends State<Register> {
                         RaisedButton(
                           child: Text(
                             "Register",
-                            style: TextStyle(color: Colors.black),
+                            style: Theme.of(context).textTheme.button,
                           ),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {

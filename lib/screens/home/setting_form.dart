@@ -143,7 +143,7 @@ class _SettingsFormState extends State<SettingsForm> {
                           child: Icon(Icons.calendar_today),
                           foregroundColor: Colors.white,
                           backgroundColor: _parsedDueDate == ""
-                              ? Colors.red
+                              ? Theme.of(context).accentColor
                               : Theme.of(context).buttonColor,
                           elevation: 0,
                         ),
@@ -183,56 +183,68 @@ class _SettingsFormState extends State<SettingsForm> {
                       () => _currentImportance = val.round(),
                     ),
                   ),
-                  RaisedButton(
-                      child: Text(
-                          widget.test != null ? "Update Test" : "Add Test"),
-                      onPressed: () async {
-                        if (_formKey.currentState.validate() &&
-                            _parsedDueDate != "" &&
-                            isLoading == false) {
-                          if (widget.test == null) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            final testId = await DatabaseService(user.uid)
-                                .createNewTest(
-                                    _currentSubject ?? "",
-                                    _currentComplexity ?? 0,
-                                    _currentImportance ?? 0,
-                                    _currentDescription ?? "",
-                                    _currentDueDate,
-                                    user.uid);
-                            await TimeAllocation(
-                                    user.uid, [], _currentComplexity,
-                                    dueDate: _currentDueDate, testId: testId)
-                                .calculateSessions();
-                            if (this.mounted) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              Navigator.pop(context);
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RaisedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("Cancel"),
+                        color: Theme.of(context).accentColor,
+                      ),
+                      RaisedButton(
+                          child: Text(
+                              widget.test != null ? "Update Test" : "Add Test"),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate() &&
+                                _parsedDueDate != "" &&
+                                isLoading == false) {
+                              if (widget.test == null) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                final testId = await DatabaseService(user.uid)
+                                    .createNewTest(
+                                        _currentSubject ?? "",
+                                        _currentComplexity ?? 0,
+                                        _currentImportance ?? 0,
+                                        _currentDescription ?? "",
+                                        _currentDueDate,
+                                        user.uid);
+                                await TimeAllocation(
+                                        user.uid, [], _currentComplexity,
+                                        dueDate: _currentDueDate,
+                                        testId: testId)
+                                    .calculateSessions();
+                                if (this.mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                if (isLoading == false) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  await DatabaseService(user.uid)
+                                      .updateDocument(
+                                          "tests", widget.test.testId, {
+                                    "subject": _currentSubject ?? "",
+                                    "complexity": _currentComplexity ?? 0,
+                                    "importance": _currentImportance ?? 0,
+                                    "description": _currentDescription ?? "",
+                                    "user": user.uid
+                                  });
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  Navigator.pop(context);
+                                }
+                              }
                             }
-                          } else {
-                            if (isLoading == false) {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              await DatabaseService(user.uid)
-                                  .updateDocument("tests", widget.test.testId, {
-                                "subject": _currentSubject ?? "",
-                                "complexity": _currentComplexity ?? 0,
-                                "importance": _currentImportance ?? 0,
-                                "description": _currentDescription ?? "",
-                                "user": user.uid
-                              });
-                              setState(() {
-                                isLoading = false;
-                              });
-                              Navigator.pop(context);
-                            }
-                          }
-                        }
-                      }),
+                          }),
+                    ],
+                  ),
                 ],
               ),
       ),

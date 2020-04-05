@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/models/event_from_device.dart';
 import 'package:test_device/models/test.dart';
@@ -12,21 +14,27 @@ import 'package:test_device/screens/settings/settings.dart';
 import 'package:test_device/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:test_device/shared/loading.dart';
-import "package:tutorial_coach_mark/animated_focus_light.dart";
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 const String testDevice = "";
 
 class Home extends StatefulWidget {
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+  Home({this.analytics, this.observer});
+
   @override
-  _HomeState createState() => _HomeState();
+  _HomeState createState() => _HomeState(analytics, observer);
 }
 
 class _HomeState extends State<Home> {
+  _HomeState(this.analytics, this.observer);
   GlobalKey _testKey = GlobalKey();
   GlobalKey _calendarKey = GlobalKey();
   GlobalKey _settingsKey = GlobalKey();
-
+  final FirebaseAnalyticsObserver observer;
+  final FirebaseAnalytics analytics;
   final EventFromDevice device = new EventFromDevice();
 
   DatabaseService database;
@@ -49,6 +57,7 @@ class _HomeState extends State<Home> {
   }
 
   didChangeDependencies() async {
+    await analytics.logEvent(name: "Home (did dependencaes change loaded");
     super.didChangeDependencies();
     try {
       user = Provider.of<User>(context);
@@ -62,35 +71,35 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void showTutorial() {
+  void showTutorial() async {
+    await analytics.logTutorialBegin();
+
     TutorialCoachMark(context,
         targets: targets,
         colorShadow: Colors.red,
         textSkip: "QUIT",
         paddingFocus: 10,
-        opacityShadow: 0.8, finish: () {
-      print("finish");
+        opacityShadow: 0.8, finish: () async {
+      await analytics.logTutorialComplete();
     }, clickTarget: (target) {
       print(target);
-    }, clickSkip: () {
-      print("skip");
+    }, clickSkip: () async {
+      await analytics.logEvent(name: "Main Tutorial Skipped");
     })
       ..show();
   }
 
-  void showSettings() {
+  void showSettings() async {
+    await analytics.logEvent(name: "Settings Warning from Home");
     TutorialCoachMark(context,
         targets: settings,
         colorShadow: Colors.red,
         textSkip: "QUIT",
         paddingFocus: 10,
-        opacityShadow: 0.9, finish: () {
-      print("finish");
-    }, clickTarget: (target) {
+        opacityShadow: 0.9,
+        finish: () async {}, clickTarget: (target) {
       print(target);
-    }, clickSkip: () {
-      print("skip");
-    })
+    }, clickSkip: () async {})
       ..show();
   }
 
@@ -124,11 +133,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    void _showSettingsPanel() {
+    void _showSettingsPanel() async {
       if (isConfigured == false) {
         showSettings();
       } else {
+        await analytics.logEvent(name: "Open Add test modal");
         showModalBottomSheet(
+            isDismissible: false,
             context: context,
             builder: (context) {
               return SingleChildScrollView(
@@ -196,7 +207,8 @@ class _HomeState extends State<Home> {
                     visible: isWelcomeScreenSeen == true,
                     key: _settingsKey,
                     child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await analytics.logEvent(name: "Go to settings");
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Settings()),
@@ -247,11 +259,17 @@ class _HomeState extends State<Home> {
                         tooltip: "Show Calendar",
                         heroTag: "calendar",
                         key: _calendarKey,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Calendar()),
-                          );
+                        onPressed: () async {
+                          if (isConfigured == false) {
+                            showSettings();
+                          } else {
+                            await analytics.logEvent(name: "Go to Calendar");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Calendar()),
+                            );
+                          }
                         },
                         child: Icon(
                           Icons.calendar_today,

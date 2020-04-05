@@ -187,7 +187,7 @@ class _TestTileState extends State<TestTile> {
                         image: AssetImage("assets/add-event.png"),
                       ),
                       mini: true,
-                      backgroundColor: Theme.of(context).accentColor),
+                      backgroundColor: Theme.of(context).primaryColor),
                 ),
                 Visibility(
                   visible: widget.test.isAllocated,
@@ -213,22 +213,23 @@ class _TestTileState extends State<TestTile> {
                 Visibility(
                   visible: !widget.test.isAllocated,
                   child: FloatingActionButton(
-                      heroTag: "delete${widget.test.testId}",
-                      tooltip: "Delete test",
-                      key: showDeleteTest,
-                      onPressed: () async {
-                        // delete sessions
-                        await firestore.deleteDocumentWhere(
-                            "sessions", "testId", widget.test.testId);
-                        //delete test event from device
-                        await firestore.deleteDeviceTests(widget.test.testId);
-                        // delete test
-                        await firestore.deleteDocument(widget.test.testId);
-                      },
-                      child: Icon(Icons.delete),
-                      foregroundColor: Colors.white,
-                      mini: true,
-                      backgroundColor: Colors.red),
+                    heroTag: "delete${widget.test.testId}",
+                    tooltip: "Delete test",
+                    key: showDeleteTest,
+                    onPressed: () async {
+                      // delete sessions
+                      await firestore.deleteDocumentWhere(
+                          "sessions", "testId", widget.test.testId);
+                      //delete test event from device
+                      await firestore.deleteDeviceTests(widget.test.testId);
+                      // delete test
+                      await firestore.deleteDocument(widget.test.testId);
+                    },
+                    child: Icon(Icons.delete),
+                    foregroundColor: Colors.white,
+                    mini: true,
+                    backgroundColor: Theme.of(context).accentColor,
+                  ),
                 ),
               ],
             ),

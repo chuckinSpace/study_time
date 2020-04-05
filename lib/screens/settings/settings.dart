@@ -475,8 +475,7 @@ class _SettingsState extends State<Settings> {
                           onPressed: () async {
                             AuthService _auth = new AuthService();
                             await _auth.signOut();
-                            Navigator.pushReplacementNamed(
-                                context, "/authenticate");
+                            Navigator.pop(context);
                           },
                           icon: Icon(Icons.exit_to_app),
                           textColor: Colors.red,
