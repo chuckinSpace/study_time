@@ -57,10 +57,10 @@ class _HomeState extends State<Home> {
   }
 
   didChangeDependencies() async {
-    await analytics.logEvent(name: "Home (did dependencaes change loaded");
+    await analytics.logEvent(name: "Home");
     super.didChangeDependencies();
     try {
-      user = Provider.of<User>(context);
+      user = Provider.of<User>(context, listen: false);
       if (user != null) {
         database = new DatabaseService(user.uid);
 
@@ -84,13 +84,13 @@ class _HomeState extends State<Home> {
     }, clickTarget: (target) {
       print(target);
     }, clickSkip: () async {
-      await analytics.logEvent(name: "Main Tutorial Skipped");
+      await analytics.logEvent(name: "Main_Tutorial_Skipped");
     })
       ..show();
   }
 
   void showSettings() async {
-    await analytics.logEvent(name: "Settings Warning from Home");
+    await analytics.logEvent(name: "Settings_Warning_from_Home");
     TutorialCoachMark(context,
         targets: settings,
         colorShadow: Colors.red,
@@ -137,7 +137,7 @@ class _HomeState extends State<Home> {
       if (isConfigured == false) {
         showSettings();
       } else {
-        await analytics.logEvent(name: "Open Add test modal");
+        await analytics.logEvent(name: "Open_Add_test_modal");
         showModalBottomSheet(
             isDismissible: false,
             context: context,
@@ -208,7 +208,7 @@ class _HomeState extends State<Home> {
                     key: _settingsKey,
                     child: IconButton(
                       onPressed: () async {
-                        await analytics.logEvent(name: "Go to settings");
+                        await analytics.logEvent(name: "Go_to_settings");
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Settings()),
@@ -263,7 +263,7 @@ class _HomeState extends State<Home> {
                           if (isConfigured == false) {
                             showSettings();
                           } else {
-                            await analytics.logEvent(name: "Go to Calendar");
+                            await analytics.logEvent(name: "Go_to_Calendar");
                             Navigator.push(
                               context,
                               MaterialPageRoute(

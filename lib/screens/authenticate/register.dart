@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/services/auth.dart';
 import 'package:test_device/shared/constants.dart';
@@ -5,15 +7,20 @@ import 'package:test_device/shared/loading.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
-  Register({this.toggleView});
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+  Register({this.toggleView, this.observer, this.analytics});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterState createState() => _RegisterState(analytics, observer);
 }
 
 class _RegisterState extends State<Register> {
+  _RegisterState(this.analytics, this.observer);
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final FirebaseAnalyticsObserver observer;
+  final FirebaseAnalytics analytics;
   String email = "";
   String password = "";
   String error = "";
@@ -104,12 +111,17 @@ class _RegisterState extends State<Register> {
                             style: Theme.of(context).textTheme.button,
                           ),
                           onPressed: () async {
+                            await analytics.logSignUp(
+                                signUpMethod: "email_password");
                             if (_formKey.currentState.validate()) {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.registerWithEmailandPassword(
                                       email.trim(), password);
                               if (result != "") {
+                                analytics.logEvent(
+                                    name: "error_user_password",
+                                    parameters: result);
                                 setState(() {
                                   error = result;
                                   loading = false;

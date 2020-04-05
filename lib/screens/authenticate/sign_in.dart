@@ -1,4 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/screens/home/home.dart';
 import 'package:test_device/services/auth.dart';
@@ -6,14 +8,20 @@ import 'package:test_device/shared/constants.dart';
 import 'package:test_device/shared/loading.dart';
 
 class SignIn extends StatefulWidget {
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
   final Function toggleView;
-  SignIn({this.toggleView});
+  SignIn({this.toggleView, this.analytics, this.observer});
 
   @override
-  _SignInState createState() => _SignInState();
+  _SignInState createState() => _SignInState(analytics, observer);
 }
 
 class _SignInState extends State<SignIn> {
+  _SignInState(this.analytics, this.observer);
+  final FirebaseAnalyticsObserver observer;
+  final FirebaseAnalytics analytics;
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   String email = "";
@@ -22,6 +30,13 @@ class _SignInState extends State<SignIn> {
   String error = "";
   bool loading = false;
   bool _retrievePassword = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading
@@ -47,7 +62,8 @@ class _SignInState extends State<SignIn> {
                   Visibility(
                     visible: _retrievePassword == false,
                     child: FlatButton.icon(
-                        onPressed: () {
+                        onPressed: () async {
+                          await analytics.logLogin();
                           widget.toggleView();
                         },
                         icon: Icon(
@@ -159,6 +175,7 @@ class _SignInState extends State<SignIn> {
                               child: Text("Sign In With Google",
                                   style: Theme.of(context).textTheme.button),
                               onPressed: () async {
+                                await analytics.logEvent(name: "Google_Button");
                                 setState(() => loading = true);
                                 dynamic result = await _auth.signInWithGoogle();
 
@@ -241,6 +258,7 @@ class _SignInState extends State<SignIn> {
                                   setState(() {
                                     loading = true;
                                   });
+                                  await analytics.logLogin();
                                   dynamic result =
                                       await _auth.signInWithEmailandPassword(
                                           email.trim(), password);

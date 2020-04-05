@@ -625,7 +625,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "The most important part, select here, wich one is the calendar that you use, the list showing here are the your device's current calendars. Study time will retrieve events from here to check for availability and also will write the tests and sessions created.",
+                      "The most important part, select here, wich one is the calendar that you use, the list showing here are your device's current calendars. Study time will retrieve events from the calendar selected to check for availability,and also will write the tests and sessions created.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )

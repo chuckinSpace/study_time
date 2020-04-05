@@ -16,7 +16,7 @@ class Wrapper extends StatelessWidget {
 
     // return eurhter home or autheticate depeending on auth
     if (user == null) {
-      return Authenticate();
+      return Authenticate(analytics: analytics, observer: observer);
     } else {
       return Home(
         analytics: analytics,
