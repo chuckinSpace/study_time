@@ -111,10 +111,12 @@ class _SettingsState extends State<Settings> {
         _calendarToUseName = user["calendarToUseName"];
         isCalendarId = _calendarToUse != "";
         isConfigured = user["isConfigured"];
-        if (isCalendarId == true) {
+        if (isCalendarId == true && _calendars.isNotEmpty) {
           _textForCalendars = "Choose your Calendar";
-        } else {
+        } else if (isCalendarId == false && _calendars.isNotEmpty) {
           _textForCalendars = "Choose your Calendar *";
+        } else {
+          _textForCalendars = "No Calendars Found";
         }
       });
     }
@@ -445,20 +447,25 @@ class _SettingsState extends State<Settings> {
                               shrinkWrap: true,
                               itemCount: _calendars?.length ?? 0,
                               itemBuilder: (BuildContext context, int index) {
-                                return CheckboxListTile(
-                                    title:
-                                        Text(_calendars[index]["name"] ?? ""),
-                                    value: _calendars[index]["inUse"] ?? "",
-                                    onChanged: (bool newValue) {
-                                      setState(() {
-                                        _calendars[index]["inUse"] = newValue;
-                                        _calendarToUse =
-                                            _calendars[index]["id"];
-                                        _calendarToUseName =
-                                            _calendars[index]["name"];
-                                        isCalendarId = true;
+                                if (_calendars.isEmpty || _calendars == null) {
+                                  return AutoSizeText(
+                                      "I could not retrieve your calendars,please check your system settings");
+                                } else {
+                                  return CheckboxListTile(
+                                      title:
+                                          Text(_calendars[index]["name"] ?? ""),
+                                      value: _calendars[index]["inUse"] ?? "",
+                                      onChanged: (bool newValue) {
+                                        setState(() {
+                                          _calendars[index]["inUse"] = newValue;
+                                          _calendarToUse =
+                                              _calendars[index]["id"];
+                                          _calendarToUseName =
+                                              _calendars[index]["name"];
+                                          isCalendarId = true;
+                                        });
                                       });
-                                    });
+                                }
                               })
                           : Row(
                               mainAxisSize: MainAxisSize.min,

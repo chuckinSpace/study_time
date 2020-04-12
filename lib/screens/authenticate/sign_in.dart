@@ -240,6 +240,12 @@ class _SignInState extends State<SignIn> {
                                 });
                               },
                             ),
+                            SizedBox(height: 12),
+                            Text(
+                              error,
+                              style: TextStyle(
+                                  color: Colors.redAccent, fontSize: 14),
+                            ),
                             SizedBox(height: 20),
                             RaisedButton(
                               child: Text("Sign In",
@@ -274,10 +280,6 @@ class _SignInState extends State<SignIn> {
                                 }
                               },
                             ),
-                            SizedBox(height: 12),
-                            Text(error,
-                                style: TextStyle(
-                                    color: Colors.redAccent, fontSize: 20))
                           ],
                         ),
                       ),

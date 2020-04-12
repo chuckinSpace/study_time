@@ -40,9 +40,20 @@ class TimeAllocation {
   int daysUntil(DateTime dueDate) {
     try {
       if (dueDate != null) {
-        final daysUntil = dueDate.difference(today).inDays;
-        sessionsToAllocate(daysUntil);
-        return daysUntil;
+        if (useToday()) {
+          final dayToCompare =
+              new DateTime(today.year, today.month, today.day, 8, 0, 0, 0, 0);
+          var daysUntil = dueDate.difference(dayToCompare).inDays;
+          return daysUntil;
+        } else {
+          var daysUntil = dueDate.difference(today).inDays;
+          return daysUntil;
+        }
+
+        /*    if (useToday() == true) {
+          daysUntil += 1;
+        } */
+
       } else {
         return null;
       }
@@ -275,6 +286,7 @@ class TimeAllocation {
 
   Map addToFinalSessions(Map session, List<EventFromDevice> eventsFromDevice) {
     try {
+      /*    if (session != null) checkToday(session); */
       if (isAvailableFromDevice(session, eventsFromDevice) == true) {
         finalSessions.add(Session(
             sessionNumber: session["sessionNumber"],
@@ -353,6 +365,7 @@ class TimeAllocation {
     Map session,
   ) {
     try {
+      if (session != null) checkToday(session);
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       while (checkSweetSpot(session, eventsFromDevice) == true) {
@@ -390,6 +403,7 @@ class TimeAllocation {
   ) {
     print("addIfNightOwl with $session");
     try {
+      if (session != null) checkToday(session);
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       session["start"] = new DateTime(
@@ -446,6 +460,7 @@ class TimeAllocation {
       List<EventFromDevice> eventsFromDevice, Map<dynamic, dynamic> session) {
     print("addIfEarlyBird with $session");
     try {
+      if (session != null) checkToday(session);
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       session["start"] = setEarlyBirdStart(session["start"]);
@@ -684,34 +699,31 @@ class TimeAllocation {
     });
   }
 
-  void checkToday(List<Session> finalSessions) {
-    finalSessions.forEach((finalSession) {
-      if (finalSession.start.day == today.day) {
-        if (useToday()) {
-          finalSession.start = new DateTime(
-              finalSession.start.year,
-              finalSession.start.month,
-              finalSession.start.day,
-              today.hour,
-              0,
-              0,
-              0,
-              0);
-          if (idealStudyLenght == 30) {
-            finalSession.end =
-                finalSession.start.add(new Duration(minutes: 30));
-          } else {
-            finalSession.end =
-                finalSession.start.add(new Duration(hours: idealStudyLenght));
-          }
+  void checkToday(Map session) {
+    if (session["start"].day == today.day) {
+      if (useToday()) {
+        session["start"] = new DateTime(
+            session["start"].year,
+            session["start"].month,
+            session["start"].day,
+            today.hour + 1,
+            0,
+            0,
+            0,
+            0);
+        if (idealStudyLenght == 30) {
+          session["end"] = session["start"].add(new Duration(minutes: 30));
+        } else {
+          session["end"] =
+              session["start"].add(new Duration(hours: idealStudyLenght));
         }
       }
-    });
+    }
   }
 
   Future<void> createSessions(List<Session> finalSessions) async {
     setSessionNumber(finalSessions);
-    checkToday(finalSessions);
+
     DatabaseService database = new DatabaseService(this.uid);
     this.finalSessions = finalSessions;
     if (testing == false) {
@@ -775,6 +787,7 @@ class TimeAllocation {
       List<EventFromDevice> eventsFromDevice) {
     try {
       if (daysToTry != null && session != null) {
+        if (session != null) checkToday(session);
         daysToTry.sort((a, b) => b.compareTo(a));
         bool isLocked = false;
         daysToTry.forEach((day) {

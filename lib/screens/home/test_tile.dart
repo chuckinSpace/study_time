@@ -144,7 +144,7 @@ class _TestTileState extends State<TestTile> {
         margin: EdgeInsets.fromLTRB(20, 6, 20, 0),
         child: ListTile(
             key: showTest,
-            onTap: _showSettingsPanel,
+            /*    onTap: _showSettingsPanel, */
             leading: widget.index == 0
                 ? IconButton(
                     icon: Tooltip(
