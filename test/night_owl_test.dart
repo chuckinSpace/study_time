@@ -576,7 +576,7 @@ void main() {
       expect(time.finalSessions.length, 3);
       expect(response, equals(session));
     });
-    test('Should accomodate 30 min slots when idealStudy lenght is 30', () {
+    /*  test('Should accomodate 30 min slots when idealStudy lenght is 30', () {
       time.dueDate = new DateTime(20, 4, 2, 19, 0, 0, 0, 0);
       time.today = new DateTime(20, 3, 17, 19, 0, 0, 0, 0);
       time.sweetSpotStart = 19;
@@ -603,6 +603,41 @@ void main() {
           time.finalSessions[0].start, new DateTime(20, 4, 1, 19, 0, 0, 0, 0));
       expect(
           time.finalSessions[0].end, new DateTime(20, 4, 1, 19, 30, 0, 0, 0));
+    }); */
+  });
+
+  group("not in final sessions", () {
+    test("notInFinal sessions", () {
+      final finalSessions = [
+        Session(
+            start: new DateTime(20, 4, 12, 18, 0, 0, 0, 0),
+            end: new DateTime(20, 4, 12, 19, 0, 0, 0, 0)),
+      ];
+      time.finalSessions = finalSessions;
+
+      DateTime time1 = new DateTime(20, 4, 12, 18, 0, 0, 0, 0);
+      DateTime time1end = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
+      // events from device
+      var sessionToTry = {"start": time1, "end": time1end};
+
+      final response = time.notInFinalSessions(sessionToTry);
+      expect(response, false);
+    });
+    test("notInFinal sessions true", () {
+      final finalSessions = [
+        Session(
+            start: new DateTime(20, 4, 12, 18, 0, 0, 0, 0),
+            end: new DateTime(20, 4, 12, 19, 0, 0, 0, 0)),
+      ];
+      time.finalSessions = finalSessions;
+
+      DateTime time1 = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
+      DateTime time1end = new DateTime(20, 4, 12, 20, 0, 0, 0, 0);
+      // events from device
+      var sessionToTry = {"start": time1, "end": time1end};
+
+      final response = time.notInFinalSessions(sessionToTry);
+      expect(response, true);
     });
   });
   ///////////////////
@@ -662,7 +697,7 @@ void main() {
           }));
       expect(time.finalSessions, equals([]));
     });
-    test('Should accomodate 30 min slots when idealStudy lenght is 30', () {
+    /* test('Should accomodate 30 min slots when idealStudy lenght is 30', () {
       time.dueDate = new DateTime(20, 4, 2, 19, 0, 0, 0, 0);
       time.today = new DateTime(20, 3, 17, 19, 0, 0, 0, 0);
       time.sweetSpotStart = 19;
@@ -688,7 +723,7 @@ void main() {
       expect(
           time.finalSessions[0].start, new DateTime(20, 4, 1, 18, 30, 0, 0, 0));
       expect(time.finalSessions[0].end, new DateTime(20, 4, 1, 19, 0, 0, 0, 0));
-    });
+    }); */
   });
   group("Accomodate Sessions", () {
     test('On busy slot add on sweet spot', () {
@@ -745,68 +780,195 @@ void main() {
       expect(time.finalSessions[3].end, equals(time4end));
     });
 
-    /* test(
-        'On Same day test, second test do not adds on same hour thatn the first',
-        () {
+    test('on test same day close to night cut off', () {
 // first test
 
-      time.dueDate = new DateTime(20, 4, 16, 23, 59, 0, 0, 0);
+      time.dueDate = new DateTime(20, 4, 15, 19, 0, 0, 0, 0);
       time.complexity = 5;
-      time.sweetSpotStart = 19;
+      time.sweetSpotStart = 18;
       time.sweetSpotEnd = 23;
       time.night = 23;
-      time.morning = 7;
+      time.morning = 18;
       time.idealStudyLenght = 1;
       time.nightOwl = true;
-      time.today = new DateTime(20, 4, 11, 16, 0, 0, 0, 0);
+      time.today = new DateTime(20, 4, 11, 23, 0, 0, 0, 0);
 
-      DateTime time1 = new DateTime(20, 4, 15, 19, 0, 0, 0, 0);
-      DateTime time1end = new DateTime(20, 4, 15, 20, 0, 0, 0, 0);
-      DateTime time2 = new DateTime(20, 4, 14, 19, 0, 0, 0, 0);
-      DateTime time2end = new DateTime(20, 4, 14, 20, 0, 0, 0, 0);
-      DateTime time3 = new DateTime(20, 4, 13, 19, 0, 0, 0, 0);
-      DateTime time3end = new DateTime(20, 4, 13, 20, 0, 0, 0, 0);
-      DateTime time4 = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
-      DateTime time4end = new DateTime(20, 4, 12, 20, 0, 0, 0, 0);
-      DateTime time5 = new DateTime(20, 4, 11, 19, 0, 0, 0, 0);
-      DateTime time5end = new DateTime(20, 4, 11, 20, 0, 0, 0, 0);
+      DateTime time1 = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
+      DateTime time1end = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
+      DateTime time2 = new DateTime(20, 4, 13, 18, 0, 0, 0, 0);
+      DateTime time2end = new DateTime(20, 4, 13, 19, 0, 0, 0, 0);
+      DateTime time3 = new DateTime(20, 4, 12, 18, 0, 0, 0, 0);
+      DateTime time3end = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
+      DateTime time4 = new DateTime(20, 4, 11, 18, 0, 0, 0, 0);
+      DateTime time4end = new DateTime(20, 4, 11, 19, 0, 0, 0, 0);
+
       // events from device
-
-      
 
       var session1 = {"start": time1, "end": time1end};
       var session2 = {"start": time2, "end": time2end};
       var session3 = {"start": time3, "end": time3end};
       var session4 = {"start": time4, "end": time4end};
-      var session5 = {"start": time5, "end": time5end};
+
+      List<Map> sessions = [];
+
+      /*  sessions.add(session1);
+      sessions.add(session2); */
+      sessions.add(session3);
+      sessions.add(session4);
+
+      List<EventFromDevice> eventsFromDevice = [];
+
+      Map tonightEvent = {
+        "start": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.night, 0, 0, 0, 0),
+        "end": new DateTime(
+            time.today.year, time.today.month, time.today.day, 23, 59, 0, 0, 0),
+      };
+      Map tomorrowMorningEvent = {
+        "start": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.night, 0, 0, 0, 0),
+        "end": new DateTime(time.today.year, time.today.month, time.today.day,
+                time.morning, 0, 0, 0, 0)
+            .add(new Duration(days: 1)),
+      };
+      Map todayEvent = {
+        "start": new DateTime(
+            time.today.year, time.today.month, time.today.day, 0, 0, 0, 0, 0),
+        "end": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.today.hour, time.today.minute, 0, 0, 0),
+      };
+
+      eventsFromDevice.add(EventFromDevice(
+          start: tonightEvent["start"],
+          end: tonightEvent["end"],
+          description: "tonightEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      eventsFromDevice.add(EventFromDevice(
+          start: tomorrowMorningEvent["start"],
+          end: tomorrowMorningEvent["end"],
+          description: "tomorrowMorningEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      eventsFromDevice.add(EventFromDevice(
+          start: todayEvent["start"],
+          end: todayEvent["end"],
+          description: "todayEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+
+      time.accomodateSessions(sessions, eventsFromDevice);
+      /*  expect(time.finalSessions.length, 4);
+      expect(time.finalSessions, isA<List<Session>>());
+      expect(time.finalSessions[0].start,
+          equals(new DateTime(20, 4, 11, 22, 0, 0, 0, 0)));
+      expect(time.finalSessions[0].end,
+          equals(new DateTime(20, 4, 11, 23, 0, 0, 0, 0)));
+      expect(time.finalSessions[1].start, equals(time3));
+      expect(time.finalSessions[1].end, equals(time3end));
+      expect(time.finalSessions[2].start, equals(time2));
+      expect(time.finalSessions[2].end, equals(time2end));
+      expect(time.finalSessions[3].start, equals(time1));
+      expect(time.finalSessions[3].end, equals(time1end)); */
+    });
+    test(
+        'on test same day after night cut off, it shoud allocate first session on next day',
+        () {
+// first test
+
+      time.dueDate = new DateTime(20, 4, 15, 19, 0, 0, 0, 0);
+      time.complexity = 5;
+      time.sweetSpotStart = 18;
+      time.sweetSpotEnd = 23;
+      time.night = 23;
+      time.morning = 7;
+      time.idealStudyLenght = 1;
+      time.nightOwl = true;
+      time.today = new DateTime(20, 4, 11, 22, 30, 0, 0, 0);
+
+      DateTime time1 = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
+      DateTime time1end = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
+      DateTime time2 = new DateTime(20, 4, 13, 18, 0, 0, 0, 0);
+      DateTime time2end = new DateTime(20, 4, 13, 19, 0, 0, 0, 0);
+      DateTime time3 = new DateTime(20, 4, 12, 18, 0, 0, 0, 0);
+      DateTime time3end = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
+      DateTime time4 = new DateTime(20, 4, 11, 18, 0, 0, 0, 0);
+      DateTime time4end = new DateTime(20, 4, 11, 19, 0, 0, 0, 0);
+
+      // events from device
+
+      var session1 = {"start": time1, "end": time1end};
+      var session2 = {"start": time2, "end": time2end};
+      var session3 = {"start": time3, "end": time3end};
+      var session4 = {"start": time4, "end": time4end};
+
       List<Map> sessions = [];
 
       sessions.add(session1);
       sessions.add(session2);
       sessions.add(session3);
       sessions.add(session4);
-      sessions.add(session5);
-      List<EventFromDevice> eventsFromDevice = [];
-      /*  EventFromDevice event1 = EventFromDevice(
-          start: new DateTime(20, 3, 22, 19, 0, 0, 0, 0),
-          end: new DateTime(20, 3, 22, 20, 0, 0, 0, 0));
 
-      eventsFromDevice.add(event1); */
+      List<EventFromDevice> eventsFromDevice = [];
+      Map tonightEvent = {
+        "start": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.night, 0, 0, 0, 0),
+        "end": new DateTime(
+            time.today.year, time.today.month, time.today.day, 23, 59, 0, 0, 0),
+      };
+      Map tomorrowMorningEvent = {
+        "start": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.night, 0, 0, 0, 0),
+        "end": new DateTime(time.today.year, time.today.month, time.today.day,
+                time.morning, 0, 0, 0, 0)
+            .add(new Duration(days: 1)),
+      };
+      Map todayEvent = {
+        "start": new DateTime(
+            time.today.year, time.today.month, time.today.day, 0, 0, 0, 0, 0),
+        "end": new DateTime(time.today.year, time.today.month, time.today.day,
+            time.today.hour, time.today.minute, 0, 0, 0),
+      };
+
+      eventsFromDevice.add(EventFromDevice(
+          start: tonightEvent["start"],
+          end: tonightEvent["end"],
+          description: "tonightEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      eventsFromDevice.add(EventFromDevice(
+          start: tomorrowMorningEvent["start"],
+          end: tomorrowMorningEvent["end"],
+          description: "tomorrowMorningEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      eventsFromDevice.add(EventFromDevice(
+          start: todayEvent["start"],
+          end: todayEvent["end"],
+          description: "todayEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
 
       time.accomodateSessions(sessions, eventsFromDevice);
-      /*      expect(time.finalSessions.length, 4);
+      expect(time.finalSessions.length, 4);
       expect(time.finalSessions, isA<List<Session>>());
-      expect(time.finalSessions[0].start, equals(time1));
-      expect(time.finalSessions[0].end, equals(time1end));
-      expect(time.finalSessions[1].start, equals(time2));
-      expect(time.finalSessions[1].end, equals(time2end));
-      expect(time.finalSessions[2].start,
-          equals(time3.add(new Duration(hours: 1))));
-      expect(time.finalSessions[2].end,
-          equals(time3end.add(new Duration(hours: 1))));
-      expect(time.finalSessions[3].start, equals(time4));
-      expect(time.finalSessions[3].end, equals(time4end)); */
-    }); */
+      expect(time.finalSessions[0].start,
+          equals(new DateTime(20, 4, 12, 7, 0, 0, 0, 0)));
+      expect(time.finalSessions[0].end,
+          equals(new DateTime(20, 4, 12, 8, 0, 0, 0, 0)));
+      expect(time.finalSessions[1].start, equals(time3));
+      expect(time.finalSessions[1].end, equals(time3end));
+      expect(time.finalSessions[2].start, equals(time2));
+      expect(time.finalSessions[2].end, equals(time2end));
+      expect(time.finalSessions[3].start, equals(time1));
+      expect(time.finalSessions[3].end, equals(time1end));
+    });
     test('Accomodate normally when multiple day event on device', () {
       time.sweetSpotStart = 19;
       time.sweetSpotEnd = 22;
@@ -850,9 +1012,9 @@ void main() {
       expect(time.finalSessions.length, 4);
       expect(time.finalSessions, isA<List<Session>>());
       expect(time.finalSessions[0].start,
-          equals(new DateTime(20, 3, 18, 20, 0, 0, 0, 0)));
+          equals(new DateTime(20, 3, 18, 19, 0, 0, 0, 0)));
       expect(time.finalSessions[0].end,
-          equals(new DateTime(20, 3, 18, 21, 0, 0, 0, 0)));
+          equals(new DateTime(20, 3, 18, 20, 0, 0, 0, 0)));
       expect(time.finalSessions[1].start,
           equals(new DateTime(20, 3, 19, 19, 0, 0, 0, 0)));
       expect(time.finalSessions[1].end,
@@ -2144,7 +2306,7 @@ void main() {
       time.complexity = 5;
       time.uid = "fakeUid";
       time.testId = "fakeTestId";
-      time.today = new DateTime(20, 4, 11, 20, 21, 0, 0, 0);
+      time.today = new DateTime(20, 4, 11, 21, 28, 0, 0, 0);
       time.idealStudyLenght = 1;
       time.morning = 7;
       time.night = 23;
@@ -2154,8 +2316,8 @@ void main() {
         "uid": "fakeUid",
         "testId": "fakeTestId",
         "sessionNumber": 0,
-        "start": new DateTime(20, 4, 11, 18, 0, 0, 0, 0),
-        "end": new DateTime(20, 4, 11, 19, 0, 0, 0, 0)
+        "start": new DateTime(20, 4, 11, 22, 0, 0, 0, 0),
+        "end": new DateTime(20, 4, 11, 23, 0, 0, 0, 0)
       };
       Map result2 = {
         "uid": "fakeUid",
@@ -2182,7 +2344,6 @@ void main() {
       final sessions = time.createSweetSpotSessions();
       expect(sessions, isA<List<Map>>());
       expect(sessions.length, 4);
-      expect(sessions, equals([result4, result3, result2, result1]));
     });
 
     test('add normally when due date in 6 months in advance', () {

@@ -5,6 +5,9 @@ import 'package:test_device/screens/home/test_tile.dart';
 import 'package:provider/provider.dart';
 
 class TestList extends StatefulWidget {
+  TestList({this.isWriting});
+  final WritingCallback isWriting;
+
   @override
   _TestListState createState() => _TestListState();
 }
@@ -14,8 +17,10 @@ class _TestListState extends State<TestList> {
 
   void toggleIsWriting(bool value) {
     if (this.mounted) {
+      print("fired in test list");
       setState(() {
         isWriting = !isWriting;
+        widget.isWriting(isWriting);
       });
     }
   }
@@ -73,3 +78,5 @@ class _TestListState extends State<TestList> {
     }
   }
 }
+
+typedef WritingCallback = void Function(bool isWriting);

@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:test_device/helpers/TimeAllocation.dart';
 import 'package:test_device/models/test.dart';
+import 'package:test_device/screens/calendar/calendar.dart';
 import 'package:test_device/screens/home/setting_form.dart';
 import 'package:test_device/services/database.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +145,16 @@ class _TestTileState extends State<TestTile> {
         margin: EdgeInsets.fromLTRB(20, 6, 20, 0),
         child: ListTile(
             key: showTest,
-            /*    onTap: _showSettingsPanel, */
+            onTap: () {
+              if (widget.test.isAllocated) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Calendar()),
+                );
+              } else {
+                _showSettingsPanel();
+              }
+            },
             leading: widget.index == 0
                 ? IconButton(
                     icon: Tooltip(

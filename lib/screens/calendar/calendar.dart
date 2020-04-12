@@ -7,6 +7,7 @@ import "package:test_device/models/test.dart";
 import 'package:table_calendar/table_calendar.dart';
 import 'package:test_device/models/user.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Calendar extends StatefulWidget {
   @override
@@ -61,6 +62,19 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
     SystemChrome.setPreferredOrientations([]);
   }
 
+  void _launchURL() async {
+    try {
+      const url = 'content://com.android.calendar/time/';
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _onDaySelected(DateTime day, List events) {
     print('CALLBACK: _onDaySelected $day, $events');
     try {
@@ -80,28 +94,31 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
         testsIds.add(test.calendarEventId);
       });
       events.forEach((event) async {
-        final description = "${event.description}";
-        final startTime = new DateFormat("HH:mm").format(event.start);
-        final endTime = new DateFormat("HH:mm").format(event.end);
+        if (event.calendarEventId != "0") {
+          final description = "${event.description}";
+          final startTime = new DateFormat("HH:mm").format(event.start);
+          final endTime = new DateFormat("HH:mm").format(event.end);
 
-        final time = "$startTime -  $endTime";
-        final start = event.start;
-        final date =
-            new DateTime(start.year, start.month, start.day, 0, 0, 0, 0, 0);
-        bool isTest = false;
+          final time = "$startTime -  $endTime";
+          final start = event.start;
+          final date =
+              new DateTime(start.year, start.month, start.day, 0, 0, 0, 0, 0);
+          bool isTest = false;
 
-        if (testsIds.contains(event.calendarEventId)) {
-          isTest = true;
-        }
-        setState(() {
-          if (_events[date] != null) {
-            _events[date].add({"text": "$description $time", "isTest": isTest});
-          } else {
-            _events[date] = [
-              {"text": "$description $time", "isTest": isTest}
-            ];
+          if (testsIds.contains(event.calendarEventId)) {
+            isTest = true;
           }
-        });
+          setState(() {
+            if (_events[date] != null) {
+              _events[date]
+                  .add({"text": "$description $time", "isTest": isTest});
+            } else {
+              _events[date] = [
+                {"text": "$description $time", "isTest": isTest}
+              ];
+            }
+          });
+        }
       });
     } catch (e) {
       print("error $e");
@@ -112,6 +129,14 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _launchURL,
+        child: Icon(
+          Icons.calendar_today,
+        ),
+        tooltip: "Device's Calendar",
+        backgroundColor: Theme.of(context).accentColor,
+      ),
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,

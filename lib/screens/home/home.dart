@@ -21,13 +21,28 @@ const String testDevice = "";
 class Home extends StatefulWidget {
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
-  Home({this.analytics, this.observer});
+
+  Home({
+    this.analytics,
+    this.observer,
+  });
 
   @override
   _HomeState createState() => _HomeState(analytics, observer);
 }
 
 class _HomeState extends State<Home> {
+  bool isWriting = false;
+
+  void toggleIsWriting(bool value) {
+    if (this.mounted) {
+      setState(() {
+        print("fired on home with $value");
+        isWriting = !isWriting;
+      });
+    }
+  }
+
   _HomeState(this.analytics, this.observer);
   GlobalKey _testKey = GlobalKey();
   GlobalKey _calendarKey = GlobalKey();
@@ -258,7 +273,9 @@ class _HomeState extends State<Home> {
                   : Container(
                       decoration: BoxDecoration(
                           color: Theme.of(context).backgroundColor),
-                      child: TestList(),
+                      child: TestList(
+                        isWriting: toggleIsWriting,
+                      ),
                     ),
               floatingActionButton: Padding(
                 padding: const EdgeInsets.only(bottom: 0.0),
@@ -266,7 +283,8 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Visibility(
-                      visible: isWelcomeScreenSeen == true,
+                      visible:
+                          isWelcomeScreenSeen == true && isWriting == false,
                       child: FloatingActionButton(
                         tooltip: "Show Calendar",
                         heroTag: "calendar",
@@ -290,7 +308,8 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     Visibility(
-                      visible: isWelcomeScreenSeen == true,
+                      visible:
+                          isWelcomeScreenSeen == true && isWriting == false,
                       child: FloatingActionButton(
                         tooltip: "Add New Test",
                         key: _testKey,

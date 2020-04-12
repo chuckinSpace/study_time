@@ -284,10 +284,33 @@ class TimeAllocation {
     }
   }
 
+  bool notInFinalSessions(Map session) {
+    var found = true;
+    if (this.finalSessions.isNotEmpty) {
+      this.finalSessions.forEach((finalSession) {
+        if ((isSame(session["start"], finalSession.start) &&
+                isSame(session["end"], finalSession.end)) ||
+            inBetween(session["start"], finalSession.start, finalSession.end)) {
+          found = false;
+        }
+      });
+      return found;
+    } else {
+      return found;
+    }
+  }
+
   Map addToFinalSessions(Map session, List<EventFromDevice> eventsFromDevice) {
     try {
-      /*    if (session != null) checkToday(session); */
-      if (isAvailableFromDevice(session, eventsFromDevice) == true) {
+      /*  var useThisDay = true;
+      if (session != null){
+        useThisDay = checkToday(session);
+      } 
+      if(useThisDay){
+
+      } */
+      if (isAvailableFromDevice(session, eventsFromDevice) == true &&
+          notInFinalSessions(session)) {
         finalSessions.add(Session(
             sessionNumber: session["sessionNumber"],
             testId: testId,
@@ -364,13 +387,16 @@ class TimeAllocation {
     List<EventFromDevice> eventsFromDevice,
     Map session,
   ) {
+    /*   var todayChanged = false; */
     try {
-      if (session != null) checkToday(session);
+      /*   if (session != null) {
+        todayChanged = checkToday(session);
+      } */
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       while (checkSweetSpot(session, eventsFromDevice) == true) {
         final isAvailable = isAvailableFromDevice(session, eventsFromDevice);
-        if (isAvailable == true) {
+        if (isAvailable == true && notInFinalSessions(session)) {
           if (finalSessions.isNotEmpty) {
             if (isLessThanTwoDaysApart(session["start"],
                     this.finalSessions[finalSessions.length - 1].start) ==
@@ -390,7 +416,7 @@ class TimeAllocation {
         }
       }
       print("no session found on sweet spot exiting addIfSweetSpot");
-      setToSweetSpot(session, session["start"].day);
+      /*  if (!todayChanged)  */ setToSweetSpot(session, session["start"].day);
       return session;
     } catch (e) {
       throw new Error("error on Add if sweet spot $e");
@@ -402,8 +428,11 @@ class TimeAllocation {
     Map<dynamic, dynamic> session,
   ) {
     print("addIfNightOwl with $session");
+/*     var todayChanged = false; */
     try {
-      if (session != null) checkToday(session);
+      /*     if (session != null) {
+        todayChanged = checkToday(session);
+      } */
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       session["start"] = new DateTime(
@@ -420,7 +449,7 @@ class TimeAllocation {
       while (session["start"].hour < night) {
         final isAvailable = isAvailableFromDevice(session, eventsFromDevice);
         print("available $isAvailable");
-        if (isAvailable == true) {
+        if (isAvailable == true && notInFinalSessions(session)) {
           if (finalSessions.isNotEmpty) {
             if (isLessThanTwoDaysApart(session["start"],
                     this.finalSessions[finalSessions.length - 1].start) ==
@@ -439,7 +468,7 @@ class TimeAllocation {
           session = addHrToSession(session, 1);
         }
       }
-      setToSweetSpot(session, session["start"].day);
+      /*   if (!todayChanged) */ setToSweetSpot(session, session["start"].day);
       return session;
     } catch (e) {
       throw new Error("error on addIfNightOwl $e");
@@ -459,8 +488,11 @@ class TimeAllocation {
   Map addIfEarlyBird(
       List<EventFromDevice> eventsFromDevice, Map<dynamic, dynamic> session) {
     print("addIfEarlyBird with $session");
+    /*   var todayChanged = false; */
     try {
-      if (session != null) checkToday(session);
+      /*    if (session != null) {
+        todayChanged = checkToday(session);
+      } */
       if (finalSessions.isNotEmpty)
         this.finalSessions.sort((a, b) => b.start.compareTo(a.start));
       session["start"] = setEarlyBirdStart(session["start"]);
@@ -469,7 +501,7 @@ class TimeAllocation {
       while (session["start"].hour >= morning) {
         final isAvailable = isAvailableFromDevice(session, eventsFromDevice);
 
-        if (isAvailable == true) {
+        if (isAvailable == true && notInFinalSessions(session)) {
           if (finalSessions.isNotEmpty) {
             if (isLessThanTwoDaysApart(session["start"],
                     this.finalSessions[finalSessions.length - 1].start) ==
@@ -489,7 +521,7 @@ class TimeAllocation {
           session = addHrToSession(session, -1);
         }
       }
-      setToSweetSpot(session, session["start"].day);
+      /*   if (!todayChanged) */ setToSweetSpot(session, session["start"].day);
       return session;
     } catch (e) {
       throw new Error("error on addIfEarlyBird $e");
@@ -699,27 +731,31 @@ class TimeAllocation {
     });
   }
 
-  void checkToday(Map session) {
-    if (session["start"].day == today.day) {
-      if (useToday()) {
-        session["start"] = new DateTime(
-            session["start"].year,
-            session["start"].month,
-            session["start"].day,
-            today.hour + 1,
-            0,
-            0,
-            0,
-            0);
-        if (idealStudyLenght == 30) {
-          session["end"] = session["start"].add(new Duration(minutes: 30));
-        } else {
-          session["end"] =
-              session["start"].add(new Duration(hours: idealStudyLenght));
-        }
+  /*  bool checkToday(Map session) {
+    if (session["start"].day == today.day && session["start"].hour < today.hour && useToday()) {
+    
+          session["start"] = new DateTime(
+              session["start"].year,
+              session["start"].month,
+              session["start"].day,
+              today.hour + 1,
+              0,
+              0,
+              0,
+              0);
+          if (idealStudyLenght == 30) {
+            session["end"] = session["start"].add(new Duration(minutes: 30));
+          } else {
+            session["end"] =
+                session["start"].add(new Duration(hours: idealStudyLenght));
+          }
+           return true;
+    }else {
+        //session is today but its ouside bouundaries dont use this day
+        return false;
       }
-    }
-  }
+
+  } */
 
   Future<void> createSessions(List<Session> finalSessions) async {
     setSessionNumber(finalSessions);
@@ -786,8 +822,11 @@ class TimeAllocation {
   Map tryDays(List<DateTime> daysToTry, Map session,
       List<EventFromDevice> eventsFromDevice) {
     try {
+      /*   var todayChanged = false; */
       if (daysToTry != null && session != null) {
-        if (session != null) checkToday(session);
+        /*  if (session != null) {
+          todayChanged = checkToday(session);
+        } */
         daysToTry.sort((a, b) => b.compareTo(a));
         bool isLocked = false;
         daysToTry.forEach((day) {
@@ -816,7 +855,8 @@ class TimeAllocation {
         if (isLocked == true) {
           return null;
         } else {
-          setToSweetSpot(session, session["start"].day);
+          /*    if (!todayChanged)  */ setToSweetSpot(
+              session, session["start"].day);
           return session;
         }
       } else {
@@ -835,6 +875,8 @@ class TimeAllocation {
       var finished = false;
 
       sessions.forEach((session) {
+        /*   checkToday(session); */
+
         var result = addToFinalSessions(session, eventsFromDevice);
         if (result != null) {
           //on rejected for that session try to allocate aroun th sweet spot on same day

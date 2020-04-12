@@ -293,7 +293,7 @@ class _SettingsState extends State<Settings> {
                             ),
                           ),
                           Text(
-                            "AM",
+                            _morningValue < 12 ? "AM" : "PM",
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -318,7 +318,7 @@ class _SettingsState extends State<Settings> {
                                       )
                                     : null,
                                 Text(
-                                  "PM",
+                                  _nightValue < 12 ? "AM" : "PM",
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ],
@@ -357,7 +357,7 @@ class _SettingsState extends State<Settings> {
                             ),
                           ),
                           Text(
-                            "AM",
+                            _sweetStart < 12 ? "AM" : "PM",
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -383,7 +383,7 @@ class _SettingsState extends State<Settings> {
                                       )
                                     : null,
                                 Text(
-                                  "PM",
+                                  _sweetEnd < 12 ? "AM" : "PM",
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ],

@@ -93,7 +93,49 @@ class EventFromDevice {
       /*  final calendars = await retrieveCalendars(); */
       final userSettings = await DatabaseService(uid).getUserSettings();
       String calendarToUse = userSettings["calendarToUse"];
+      DateTime today = new DateTime.now();
+      Map tonightEvent = {
+        "start": new DateTime(today.year, today.month, today.day,
+            userSettings["night"], 0, 0, 0, 0),
+        "end":
+            new DateTime(today.year, today.month, today.day, 23, 59, 0, 0, 0),
+      };
+      Map tomorrowMorningEvent = {
+        "start": new DateTime(today.year, today.month, today.day,
+            userSettings["night"], 0, 0, 0, 0),
+        "end": new DateTime(today.year, today.month, today.day,
+                userSettings["morning"], 0, 0, 0, 0)
+            .add(new Duration(days: 1)),
+      };
+      Map todayEvent = {
+        "start":
+            new DateTime(today.year, today.month, today.day, 0, 0, 0, 0, 0),
+        "end": new DateTime(today.year, today.month, today.day, today.hour,
+            today.minute, 0, 0, 0),
+      };
       List<EventFromDevice> events = [];
+
+      events.add(EventFromDevice(
+          start: tonightEvent["start"],
+          end: tonightEvent["end"],
+          description: "tonightEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      events.add(EventFromDevice(
+          start: tomorrowMorningEvent["start"],
+          end: tomorrowMorningEvent["end"],
+          description: "tomorrowMorningEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
+      events.add(EventFromDevice(
+          start: todayEvent["start"],
+          end: todayEvent["end"],
+          description: "todayEvent",
+          calendarEventId: "0",
+          calendarId: "noId",
+          allDay: false));
       if (calendarToUse.isNotEmpty) {
         DeviceCalendarPlugin _deviceCalendarPlugin = DeviceCalendarPlugin();
         final start = DateTime.now().add(new Duration(days: fromWhen));
