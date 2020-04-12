@@ -1,3 +1,14 @@
+/* smart banner sizes 
+32 dp when screen height ≤ 400 dp
+50 dp when screen height > 400 dp and ≤ 720 dp
+90 dp when screen height > 720 dp
+iOS
+iPhone:
+50 dp in portrait and
+32 dp in landscape
+iPads 90 dp for both
+*/
+
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -63,19 +74,21 @@ class MyApp extends StatelessWidget {
           observer: observer,
         ),
         builder: (BuildContext context, Widget widget) {
-          /*        createBannerAd(isIOS)
+          /* createBannerAd(isIOS)
             ..load()
             ..show(); */
           isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+          final screenHeight = MediaQuery.of(context).size.height;
 
           double paddingBottom = isIOS ? 90.0 : 60.0;
-          double paddingRight = 0;
+          if (screenHeight <= 400) paddingBottom = 30;
+          if (screenHeight > 400) paddingBottom = 50;
+          if (screenHeight > 720) paddingBottom = 90;
 
           return Padding(
             child: widget,
             padding: EdgeInsets.only(
-                bottom: isKeyboardOpen ? 0 : paddingBottom,
-                right: paddingRight),
+                bottom: isKeyboardOpen ? 0 : paddingBottom, right: 0),
           );
         },
       ),

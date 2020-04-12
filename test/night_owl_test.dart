@@ -793,10 +793,6 @@ void main() {
       time.nightOwl = true;
       time.today = new DateTime(20, 4, 11, 23, 0, 0, 0, 0);
 
-      DateTime time1 = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
-      DateTime time1end = new DateTime(20, 4, 14, 18, 0, 0, 0, 0);
-      DateTime time2 = new DateTime(20, 4, 13, 18, 0, 0, 0, 0);
-      DateTime time2end = new DateTime(20, 4, 13, 19, 0, 0, 0, 0);
       DateTime time3 = new DateTime(20, 4, 12, 18, 0, 0, 0, 0);
       DateTime time3end = new DateTime(20, 4, 12, 19, 0, 0, 0, 0);
       DateTime time4 = new DateTime(20, 4, 11, 18, 0, 0, 0, 0);
@@ -804,8 +800,6 @@ void main() {
 
       // events from device
 
-      var session1 = {"start": time1, "end": time1end};
-      var session2 = {"start": time2, "end": time2end};
       var session3 = {"start": time3, "end": time3end};
       var session4 = {"start": time4, "end": time4end};
 
@@ -2311,35 +2305,6 @@ void main() {
       time.morning = 7;
       time.night = 23;
       time.nightOwl = true;
-
-      Map result1 = {
-        "uid": "fakeUid",
-        "testId": "fakeTestId",
-        "sessionNumber": 0,
-        "start": new DateTime(20, 4, 11, 22, 0, 0, 0, 0),
-        "end": new DateTime(20, 4, 11, 23, 0, 0, 0, 0)
-      };
-      Map result2 = {
-        "uid": "fakeUid",
-        "testId": "fakeTestId",
-        "sessionNumber": 0,
-        "start": new DateTime(20, 4, 12, 18, 0, 0, 0, 0),
-        "end": new DateTime(20, 4, 12, 19, 0, 0, 0, 0)
-      };
-      Map result3 = {
-        "uid": "fakeUid",
-        "testId": "fakeTestId",
-        "sessionNumber": 0,
-        "start": new DateTime(20, 4, 13, 18, 0, 0, 0, 0),
-        "end": new DateTime(20, 4, 13, 19, 0, 0, 0, 0)
-      };
-      Map result4 = {
-        "uid": "fakeUid",
-        "testId": "fakeTestId",
-        "sessionNumber": 0,
-        "start": new DateTime(20, 4, 14, 18, 0, 0, 0, 0),
-        "end": new DateTime(20, 4, 14, 19, 0, 0, 0, 0)
-      };
 
       final sessions = time.createSweetSpotSessions();
       expect(sessions, isA<List<Map>>());

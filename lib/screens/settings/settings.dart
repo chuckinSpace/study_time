@@ -69,8 +69,9 @@ class _SettingsState extends State<Settings> {
       setState(() {
         isLoading = true;
       });
-      _setUserSettings(user.uid);
       _calendars = await device.retrieveCalendars();
+      await _setUserSettings(user.uid);
+
       setState(() {
         isLoading = false;
       });
@@ -94,11 +95,30 @@ class _SettingsState extends State<Settings> {
       ..show();
   }
 
+  bool _searchGoogle(String stringToSearch) {
+    return stringToSearch.contains("gmail");
+  }
+
+  Map _setCalendar(_calendars) {
+    Map calendarToReturn = {};
+    _calendars.forEach((calendar) {
+      if (_searchGoogle(calendar["name"])) {
+        calendar["inUse"] = true;
+        calendarToReturn = {
+          "calendarToUse": calendar["id"],
+          "calendarToUseName": calendar["name"]
+        };
+      }
+    });
+    return calendarToReturn;
+  }
+
   Future _setUserSettings(String uid) async {
     setState(() {
       isLoading = true;
     });
     final user = await database.getUserSettings();
+
     if (user != null) {
       setState(() {
         _morningValue = user["morning"];
@@ -107,9 +127,7 @@ class _SettingsState extends State<Settings> {
         _sweetEnd = user["sweetSpotEnd"];
         _nightOwl = user["nightOwl"];
         isLoading = false;
-        _calendarToUse = user["calendarToUse"];
-        _calendarToUseName = user["calendarToUseName"];
-        isCalendarId = _calendarToUse != "";
+
         isConfigured = user["isConfigured"];
         if (isCalendarId == true && _calendars.isNotEmpty) {
           _textForCalendars = "Choose your Calendar";
@@ -119,6 +137,20 @@ class _SettingsState extends State<Settings> {
           _textForCalendars = "No Calendars Found";
         }
       });
+      if (!isConfigured) {
+        Map calendarToSet = _setCalendar(_calendars);
+        setState(() {
+          _calendarToUse = calendarToSet["calendarToUse"];
+          _calendarToUseName = calendarToSet["calendarToUseName"];
+          isCalendarId = true;
+        });
+      } else {
+        setState(() {
+          _calendarToUse = user["calendarToUse"];
+          _calendarToUseName = user["calendarToUseName"];
+          isCalendarId = _calendarToUse != "";
+        });
+      }
     }
   }
 
@@ -538,7 +570,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Study time will not accomodate any sessions before morning Cut off or after Night cut off, usually used for bed time.\n Hint: You can use the morning cut off to take you classes into account! Example: Your classes end every day around 4pm, set the morning cut off to 4pm",
+                      "Study time will not accomodate any sessions before morning Cut off or after Night cut off, usually used for bed time.\n Hint: \nYou can use the morning cut off to take you classes into account! Example: Your classes end every day around 4pm, set the morning cut off to 4pm",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
