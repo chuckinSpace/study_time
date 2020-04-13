@@ -574,7 +574,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Study time will not accomodate any sessions before morning Cut off or after Night Cut off, usually used for bed time.\nHint: \nYou can use the morning cut off to take your classes into account!\nExample: Your classes end every day around 4pm, set the morning cut off to 4pm",
+                      "Study Planner will not accomodate any sessions before morning Cut off or after Night Cut off, usually used for bed time.\nHint: \nYou can use the morning cut off to take your classes into account!\nExample: Your classes end every day around 4pm, set the morning cut off to 4pm",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -606,7 +606,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Set the perfect time for you to study, Study Time will always try to set up sessions during these times as the first option.",
+                      "Set the perfect time for you to study, Study Planner will always try to set up sessions during these times as the first option.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -637,7 +637,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Select if you would rather have sessions later in the day (Night Owl). \nAfter study time tried to allocate on the sweet spot, it will try later in the night if this option is active, otherwise will try earlier in the morning.",
+                      "Select if you would rather have sessions later in the day (Night Owl). \nAfter Study Planner tried to allocate on the sweet spot, it will try later in the night if this option is active, otherwise will try earlier in the morning.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -668,7 +668,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "The most important part, select here, wich one is the calendar that you use, the list showing here are your device's current calendars. Study time will retrieve events from the calendar selected to check for availability,and also will write the tests and sessions created.",
+                      "The most important part, select here, wich one is the calendar that you use, the list showing here are your device's current calendars. Study Planner will retrieve events from the calendar selected to check for availability,and also will write the tests and sessions created.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )

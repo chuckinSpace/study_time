@@ -207,7 +207,7 @@ class _HomeState extends State<Home> {
             )
           : Scaffold(
               appBar: AppBar(
-                title: Text("Study Time",
+                title: Text("Study Planner",
                     style: Theme.of(context).textTheme.title),
                 elevation: 0,
                 actions: <Widget>[

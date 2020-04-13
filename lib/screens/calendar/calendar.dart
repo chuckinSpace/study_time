@@ -140,7 +140,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text("Study Time"),
+        title: Text("Study Planner"),
         elevation: 0,
         leading: IconButton(
           icon: Icon(
