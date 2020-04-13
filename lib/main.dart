@@ -74,9 +74,9 @@ class MyApp extends StatelessWidget {
           observer: observer,
         ),
         builder: (BuildContext context, Widget widget) {
-          /* createBannerAd(isIOS)
+          createBannerAd(isIOS)
             ..load()
-            ..show(); */
+            ..show();
           isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
           final screenHeight = MediaQuery.of(context).size.height;
 

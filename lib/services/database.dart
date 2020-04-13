@@ -322,14 +322,18 @@ class DatabaseService {
 //session data from snapshot
   List<Session> _sessionsDataFromSnapshot(QuerySnapshot snapshot) {
     try {
-      return snapshot.documents.map((doc) {
-        return Session(
-            uid: uid,
-            testId: doc.data["testId"],
-            sessionNumber: doc.data["sessionNumber"],
-            start: doc.data["start"].toDate(),
-            end: doc.data["end"].toDate());
-      }).toList();
+      if (uid != null) {
+        return snapshot.documents.map((doc) {
+          return Session(
+              uid: uid,
+              testId: doc.data["testId"],
+              sessionNumber: doc.data["sessionNumber"],
+              start: doc.data["start"].toDate(),
+              end: doc.data["end"].toDate());
+        }).toList();
+      } else {
+        return [];
+      }
     } catch (e) {
       print("error session snap $e");
       return [];
@@ -341,12 +345,16 @@ class DatabaseService {
     print("uid on test stream $uid");
 
     try {
-      return testCollection
-          .where("user", isEqualTo: uid)
-          .where("dueDate", isGreaterThanOrEqualTo: new DateTime.now())
-          .orderBy("dueDate", descending: false)
-          .snapshots()
-          .map(_testListFromSnapshot);
+      if (uid != null) {
+        return testCollection
+            .where("user", isEqualTo: uid)
+            .where("dueDate", isGreaterThanOrEqualTo: new DateTime.now())
+            .orderBy("dueDate", descending: false)
+            .snapshots()
+            .map(_testListFromSnapshot);
+      } else {
+        return Stream.empty();
+      }
     } catch (e) {
       print("error on test stream $e");
       return Stream.empty();

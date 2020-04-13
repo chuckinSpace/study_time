@@ -126,7 +126,6 @@ class _SettingsState extends State<Settings> {
         _sweetStart = user["sweetSpotStart"];
         _sweetEnd = user["sweetSpotEnd"];
         _nightOwl = user["nightOwl"];
-        isLoading = false;
 
         isConfigured = user["isConfigured"];
         if (isCalendarId == true && _calendars.isNotEmpty) {
@@ -134,11 +133,11 @@ class _SettingsState extends State<Settings> {
         } else if (isCalendarId == false && _calendars.isNotEmpty) {
           _textForCalendars = "Choose your Calendar *";
         } else {
-          _textForCalendars = "No Calendars Found";
+          _textForCalendars = "No Calendars Found on this Device";
         }
       });
-      if (!isConfigured) {
-        Map calendarToSet = _setCalendar(_calendars);
+      Map calendarToSet = _setCalendar(_calendars);
+      if (!isConfigured && calendarToSet.isNotEmpty) {
         setState(() {
           _calendarToUse = calendarToSet["calendarToUse"];
           _calendarToUseName = calendarToSet["calendarToUseName"];
@@ -151,6 +150,9 @@ class _SettingsState extends State<Settings> {
           isCalendarId = _calendarToUse != "";
         });
       }
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -504,24 +506,26 @@ class _SettingsState extends State<Settings> {
                               children: <Widget>[
                                 SizedBox(height: 40.0),
                                 AutoSizeText(
-                                  "I am using : $_calendarToUseName",
+                                  "   I am using : $_calendarToUseName",
                                   style: TextStyle(fontSize: 15),
                                   maxLines: 1,
                                 ),
                               ],
                             ),
                       FlatButton.icon(
-                          onPressed: () async {
-                            AuthService _auth = new AuthService();
-                            await _auth.signOut();
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.exit_to_app),
-                          textColor: Colors.red,
-                          label: Tooltip(
-                              message: "Sign Out",
-                              child: Text("Sign Out",
-                                  style: TextStyle(fontSize: 10)))),
+                        onPressed: () async {
+                          AuthService _auth = new AuthService();
+                          await _auth.signOut();
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.exit_to_app),
+                        textColor: Colors.red,
+                        label: Tooltip(
+                          message: "Sign Out",
+                          child:
+                              Text("Sign Out", style: TextStyle(fontSize: 10)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -570,7 +574,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Study time will not accomodate any sessions before morning Cut off or after Night cut off, usually used for bed time.\n Hint: \nYou can use the morning cut off to take you classes into account! Example: Your classes end every day around 4pm, set the morning cut off to 4pm",
+                      "Study time will not accomodate any sessions before morning Cut off or after Night Cut off, usually used for bed time.\nHint: \nYou can use the morning cut off to take your classes into account!\nExample: Your classes end every day around 4pm, set the morning cut off to 4pm",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
@@ -602,7 +606,7 @@ class _SettingsState extends State<Settings> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      "Set the perfect time for you to study, Study Time will always try to set up sessions between these times as the first option.",
+                      "Set the perfect time for you to study, Study Time will always try to set up sessions during these times as the first option.",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
